@@ -1,0 +1,40 @@
+# Core Python Data Stack
+pandas>=2.0.0
+numpy>=1.25.0
+scikit-learn>=1.4.0
+
+# Gradient Boosting Models
+lightgbm>=4.0.0
+xgboost>=2.0.0
+
+# Geospatial / Database
+sqlalchemy>=2.0.0
+psycopg2-binary>=2.9.9
+geoalchemy2>=0.14.2
+geopandas>=0.14.0
+shapely>=2.0.1
+
+# Visualization
+plotly>=5.18.0
+folium>=0.15.0
+matplotlib>=3.8.0
+
+# Web Framework / API
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
+streamlit>=1.35.0
+
+# Model Tracking / Reproducibility
+dvc>=3.20.0
+pyyaml>=6.0.2
+
+# Utilities
+tqdm>=4.66.0
+requests>=2.32.0
+python-dotenv>=1.0.1
+
+# Testing / Linting (optional but recommended)
+pytest>=8.0.0
+black>=24.3.0
+flake8>=7.0.0
+jupyterlab>=4.0.0
