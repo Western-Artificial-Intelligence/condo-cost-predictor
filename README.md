@@ -59,3 +59,17 @@ condo-cost-predictor/
 ├── README.md
 └── LICENSE
 
+
+MAKE SURE YOU DO THIS
+- START AN ENV 
+python3 -m venv venv
+source venv/bin/activate  # macOS/Linux
+venv\Scripts\activate     # Windows
+
+- DOWNLOAD DEPENDECIES
+pip install -r requirements.txt
+
+-after when we have it running we will use
+streamlit run app.py
+
+
