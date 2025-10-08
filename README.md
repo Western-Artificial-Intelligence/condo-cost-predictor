@@ -1,0 +1,61 @@
+ 🏙️ Toronto Condo Affordability Predictor
+
+A spatio-temporal machine learning system that predicts neighborhood-level condo prices and helps users plan down payments based on income and savings
+
+---
+
+## 📘 Overview
+
+Housing affordability is a major challenge for students and young adults in Toronto.  
+This project uses open municipal and federal datasets to:
+
+1. **Predict condo prices** across Toronto neighborhoods using machine learning (LightGBM/XGBoost).  
+2. **Estimate affordability timelines** for users based on their income and savings rate.  
+3. **Visualize attainable neighborhoods** through an interactive web application.
+
+---
+
+## 🧠 Core Features
+
+- 🗺️ Spatio-temporal price forecasting  
+- 💰 Personalized affordability and down-payment planner  
+- 📊 Interactive map with attainable neighborhoods  
+- 📦 Fully open-data pipeline using PostGIS, CMHC, and Census data  
+- ⚙️ Quantile regression for uncertainty estimates  
+
+---
+
+## 🧰 Tech Stack
+
+| Component | Technology |
+|------------|-------------|
+| **Backend / ML** | Python, scikit-learn, LightGBM, XGBoost |
+| **Database** | PostgreSQL + PostGIS |
+| **Frontend** | Streamlit |
+| **API Layer** | FastAPI |
+| **Visualization** | Plotly, Folium |
+| **Version Control** | Git + GitHub |
+
+---
+
+## ⚙️ Setup Instructions
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/Western-Artificial-Intelligence/condo-cost-predictor.git
+cd condo-cost-predictor
+
+
+STRCUTURE ONCE WE HAVE ALL SET UP 
+condo-cost-predictor/
+├── data/                   # Open datasets (CMHC, StatCan, City of Toronto)
+├── notebooks/              # Exploratory and model development notebooks
+├── src/
+│   ├── data_pipeline/      # ETL scripts for data cleaning and joins
+│   ├── models/             # Training, validation, and evaluation scripts
+│   ├── api/                # FastAPI endpoints
+│   └── app/                # Streamlit front-end
+├── requirements.txt
+├── README.md
+└── LICENSE
+
