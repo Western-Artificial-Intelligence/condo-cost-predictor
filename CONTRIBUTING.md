@@ -36,8 +36,8 @@ Keep PRs focused (one logical change per PR).
 git checkout -b "nameit'
 git add . 
 git commit -m "description"
-git status
 git push origin "thename"
+git status
 - On GitHub, open a Pull Request
 Go to your repo page → you’ll see a yellow banner “Compare & Pull Request.”
 Click it, then add a short description:
