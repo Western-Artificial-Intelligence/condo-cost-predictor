@@ -18,6 +18,17 @@ Create a new branch before working on any issue:
 ```bash
 git checkout -b backend/fastapi-setup
 
+## making your branch 
+# make sure you're on main and up-to-date
+git checkout main
+git pull origin main
+
+# Now create a new branch from the latest main
+git checkout -b settings/contrubutionformat
+git add .
+git commit -m "Add contribution format and setup"
+git push --set-upstream origin settings/contrubutionformat
+
 
 # SINCE I ALREADY SET UP THE ISSUES USE THIS FORMAT 
 #<type>: <short summary> (#issue-number)
