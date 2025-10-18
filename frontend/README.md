@@ -19,3 +19,8 @@ pip install -r requirements.txt
 
 # 5. Run the Streamlit website
 streamlit run app.py
+
+
+U should see the scaffolding for the frontend Streamlit on localhost as so:
+
+<img width="1133" height="702" alt="Screen Shot 2025-10-18 at 7 02 35 PM" src="https://github.com/user-attachments/assets/0b75602b-5ec0-4242-b2ef-a4aac9002e4e" />
