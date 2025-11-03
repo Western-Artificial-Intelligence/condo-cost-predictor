@@ -30,7 +30,7 @@ This project uses open municipal and federal datasets to:
 | Component | Technology |
 |------------|-------------|
 | **Backend / ML** | Python, scikit-learn, LightGBM, XGBoost |
-| **Database** | PostgreSQL + PostGIS |
+| **Database** | PostgreSQL + PostGIS | DuckBD, dvc
 | **Frontend** | Streamlit |
 | **API Layer** | FastAPI |
 | **Visualization** | Plotly, Folium |
