@@ -41,7 +41,7 @@ def haversine_vectorized(lon1: Union[float, Iterable], lat1: Union[float, Iterab
 def nearest_station_distance(neigh_lon, neigh_lat, stations_lon, stations_lat):
     """
     For each neighborhood point, return min distance to any station (km).
-    Inputs: 1D arrays for neighborhood (n,) and stations (m,).
+    Inputs: 1D arrays for neighborhood (n,) and stations (m,)
     Returns: numpy array (n,) with min distances.
     """
     neigh_lon = np.asarray(neigh_lon, dtype=float)
