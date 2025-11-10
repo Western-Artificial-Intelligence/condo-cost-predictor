@@ -1,10 +1,17 @@
 """
-Feature engineering utilities for condo price prediction.
-
-This module contains helper functions for calculating model features:
-- lag_features: Time-lagged variables (condo starts, etc.)
-- distance: Geographic distance calculations
-- rolling_stats: Rolling statistics and moving averages
+Feature engineering helpers for condo-cost-predictor.
+- calculate_lagged_starts
+- haversine, haversine_vectorized, nearest_station_distance
+- calculate_rolling_means
 """
+from .lag_features import calculate_lagged_starts
+from .distance import haversine, haversine_vectorized, nearest_station_distance
+from .rolling_stats import calculate_rolling_means
 
-__version__ = "0.1.0"
+__all__ = [
+    "calculate_lagged_starts",
+    "haversine",
+    "haversine_vectorized",
+    "nearest_station_distance",
+    "calculate_rolling_means",
+]
