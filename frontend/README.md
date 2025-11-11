@@ -1,29 +1,63 @@
-Steps to set up Streamlit frontend:
 
-# 1. Clone the repo in your desktop
+
+how to run the backend and frontend together:
+
+1. clone the repo
 git clone https://github.com/Western-Artificial-Intelligence/condo-cost-predictor.git
 cd condo-cost-predictor
 
-# 2. Navigate to the frontend folder
-cd frontend
 
-# 3. Create a virtual environment
-python3 -m venv venv
 
-source venv/bin/activate    (for Mac)
 
-venv\Scripts\activate       (for Windows)
 
-# 4. Install dependencies
-pip install -r requirements.txt
+2. run backend after downloading necessary packages below
+cd backend
+uvicorn app.main:app --reload --port 8000
 
-# 5. Run the Streamlit website
+make sure you have these files installed (pip install):
+fastapi
+uvicorn[standard]
+pydantic
+pydantic-settings
+python-dotenv
+requests
+pandas
+numpy
+
+
+
+
+
+
+3. run frontend after downloading necessary packages below
+open another terminal (command + T)
+cd ../frontend
 streamlit run app.py
 
+make sure you have these files installed (pip install):
+streamlit
+requests
+pandas
+numpy
 
-U should see the scaffolding for the frontend Streamlit on localhost as so:
 
-<img width="1133" height="702" alt="Screen Shot 2025-10-18 at 7 02 35 PM" src="https://github.com/user-attachments/assets/0b75602b-5ec0-4242-b2ef-a4aac9002e4e" />
 
-along with the Figma mockup here:
-https://www.figma.com/community/file/1561493805773170792
+
+
+4. open browser to see the backend and frontend connected
+http://localhost:8501
+
+------------------------------------------------------
+key features:
+- shows live neighborhood data from backend
+- displays demo line chart for condo price trends
+- lets users enter details for price prediction
+- includes loader and error handling
+- ready for future machine learning updates
+
+------------------------------------------------------
+notes:
+- backend must be running before the streamlit frontend
+- frontend default port: 8501
+- chart data is currently demo-only until ml predictions are added
+- future updates will include affordability zones and real housing data
