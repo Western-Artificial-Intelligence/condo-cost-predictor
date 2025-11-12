@@ -1,3 +1,16 @@
+# Files 
+
+- [Toronto 158 neighbourhoods](https://open.toronto.ca/dataset/neighbourhoods/) as GeoJSON file
+- [TTC Bus Transit Data](https://open.toronto.ca/dataset/ttc-routes-and-schedules/)
+- [Neighborhood crime rates](https://open.toronto.ca/dataset/neighbourhood-crime-rates/)
+- [parks & recreational locations](https://open.toronto.ca/dataset/parks-and-recreation-facilities/)
+- [active building permits](https://open.toronto.ca/dataset/building-permits-active-permits/)
+- [green roof building permits](https://open.toronto.ca/dataset/building-permits-green-roofs/)
+- [solar hot water building permits](https://open.toronto.ca/dataset/building-permits-solar-hot-water-heaters/)
+- [cleared building permits](https://open.toronto.ca/dataset/building-permits-cleared-permits/)
+- [target variable based on neighborhood region](https://trreb.ca/market-data/rental-market-report/rental-market-report-archive/)
+
+
 We will be using PostgreSQL
 - run into your terminal wtv you need to download that matches your os
 
