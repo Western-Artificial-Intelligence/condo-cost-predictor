@@ -28,5 +28,4 @@ tor_c03 = ['Humewood-Cedarvale', 'Forest Hill South', 'Yonge-Eglinton', ]
 
 tor_c02 = ['Wychwood', 'Casa Loma', 'Annex', 'Yonge-St.Clair']
 
-tor_c01 = ['Dufferin Grove', 'Little Portugual', 'Palmerston-Little Italy', 'Trinity-Bellwoods', 'University', 'Kensington-Chinatown']
-# missing islands and waterfront community 
+tor_c01 = ['Dufferin Grove', 'Little Portugual', 'Palmerston-Little Italy', 'Trinity-Bellwoods', 'University', 'Kensington-Chinatown', 'Bayfront-The Islands']
