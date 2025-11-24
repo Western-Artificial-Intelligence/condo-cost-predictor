@@ -38,3 +38,5 @@ pytest>=8.0.0
 black>=24.3.0
 flake8>=7.0.0
 jupyterlab>=4.0.0
+
+joblib~=1.5.2
