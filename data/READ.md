@@ -19,4 +19,8 @@
        'THEFTOVER_2024', 'THEFTOVER_RATE_2024', 'POPULATION_2024',
        'total_stop_count', 'avg_stop_frequency', 'max_stop_frequency',
        'total_line_length_meters', 'transit_line_density',
-       'distinct_route_count']
+       'distinct_route_count'] 
+# look at docs to undertsand what got kept and what got dropped
+
+
+## once we have all the datasets i will re run some cells from the processing notebook and we will get the finalized datasewt (the first oen to merge), tehn last to generate final csv
