@@ -2,3 +2,6 @@
 data/venv
 data/.ipynb_checkpoints
 data/source-files
+
+training/.ipynb_checkpoints
+training/.venv
