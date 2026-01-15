@@ -5,6 +5,7 @@ This directory contains training and cleaning data. This README outlines strateg
 
 # Data cleaning & Splits 
 
+Please refer to the notebook for more details.
 
 
 
