@@ -1,4 +1,4 @@
-## The app.py file in here has the updated streamit designs that include the changes made in the CUCAI-kevin document
+## The app.py file in this branch (in the frontend folder) has the updated streamit designs that include the changes made in the CUCAI-kevin document
 
 No other files other than app.py were change so they are not included in this branch
 
