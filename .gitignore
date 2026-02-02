@@ -1,6 +1,7 @@
 .env
 env/
 data/venv
+data/.venv
 data/.ipynb_checkpoints
 data/source-files
 
