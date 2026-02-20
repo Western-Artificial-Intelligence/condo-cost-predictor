@@ -1,0 +1,159 @@
+AREA_NAME,cluster_id,cluster_label
+Agincourt North,1,Connected Family Neighborhood
+Agincourt South-Malvern West,5,Transit-Rich Suburban
+Alderwood,2,Quiet Low-Density Residential
+Annex,5,Transit-Rich Suburban
+Avondale,6,High-Density Urban Core
+Banbury-Don Mills,5,Transit-Rich Suburban
+Bathurst Manor,1,Connected Family Neighborhood
+Bay-Cloverhill,6,High-Density Urban Core
+Bayview Village,1,Connected Family Neighborhood
+Bayview Woods-Steeles,2,Quiet Low-Density Residential
+Bedford Park-Nortown,1,Connected Family Neighborhood
+Beechborough-Greenbrook,2,Quiet Low-Density Residential
+Bendale South,2,Quiet Low-Density Residential
+Bendale-Glen Andrew,5,Transit-Rich Suburban
+Birchcliffe-Cliffside,1,Connected Family Neighborhood
+Black Creek,1,Connected Family Neighborhood
+Blake-Jones,2,Quiet Low-Density Residential
+Briar Hill-Belgravia,2,Quiet Low-Density Residential
+Bridle Path-Sunnybrook-York Mills,1,Connected Family Neighborhood
+Broadview North,0,Frequent-Service Corridor
+Brookhaven-Amesbury,1,Connected Family Neighborhood
+Cabbagetown-South St.James Town,2,Quiet Low-Density Residential
+Caledonia-Fairbank,2,Quiet Low-Density Residential
+Casa Loma,2,Quiet Low-Density Residential
+Centennial Scarborough,2,Quiet Low-Density Residential
+Church-Wellesley,6,High-Density Urban Core
+Clairlea-Birchmount,5,Transit-Rich Suburban
+Clanton Park,5,Transit-Rich Suburban
+Cliffcrest,1,Connected Family Neighborhood
+Corso Italia-Davenport,2,Quiet Low-Density Residential
+Danforth,2,Quiet Low-Density Residential
+Danforth East York,2,Quiet Low-Density Residential
+Don Valley Village,1,Connected Family Neighborhood
+Dorset Park,5,Transit-Rich Suburban
+Dovercourt Village,2,Quiet Low-Density Residential
+Downsview,5,Transit-Rich Suburban
+Downtown Yonge East,3,Downtown & Entertainment
+Dufferin Grove,0,Frequent-Service Corridor
+East End-Danforth,1,Connected Family Neighborhood
+East L'Amoreaux,2,Quiet Low-Density Residential
+East Willowdale,2,Quiet Low-Density Residential
+Edenbridge-Humber Valley,1,Connected Family Neighborhood
+Eglinton East,0,Frequent-Service Corridor
+Elms-Old Rexdale,2,Quiet Low-Density Residential
+Englemount-Lawrence,2,Quiet Low-Density Residential
+Eringate-Centennial-West Deane,1,Connected Family Neighborhood
+Etobicoke City Centre,5,Transit-Rich Suburban
+Etobicoke West Mall,2,Quiet Low-Density Residential
+Fenside-Parkwoods,2,Quiet Low-Density Residential
+Flemingdon Park,0,Frequent-Service Corridor
+Forest Hill North,0,Frequent-Service Corridor
+Forest Hill South,2,Quiet Low-Density Residential
+Fort York-Liberty Village,0,Frequent-Service Corridor
+Glenfield-Jane Heights,1,Connected Family Neighborhood
+Golfdale-Cedarbrae-Woburn,1,Connected Family Neighborhood
+Greenwood-Coxwell,2,Quiet Low-Density Residential
+Guildwood,2,Quiet Low-Density Residential
+Harbourfront-Cityplace,6,High-Density Urban Core
+Henry Farm,2,Quiet Low-Density Residential
+High Park North,0,Frequent-Service Corridor
+High Park-Swansea,1,Connected Family Neighborhood
+Highland Creek,1,Connected Family Neighborhood
+Hillcrest Village,1,Connected Family Neighborhood
+Humber Bay Shores,2,Quiet Low-Density Residential
+Humber Heights-Westmount,2,Quiet Low-Density Residential
+Humber Summit,5,Transit-Rich Suburban
+Humbermede,1,Connected Family Neighborhood
+Humewood-Cedarvale,2,Quiet Low-Density Residential
+Ionview,0,Frequent-Service Corridor
+Islington,1,Connected Family Neighborhood
+Junction Area,1,Connected Family Neighborhood
+Junction-Wallace Emerson,1,Connected Family Neighborhood
+Keelesdale-Eglinton West,0,Frequent-Service Corridor
+Kennedy Park,0,Frequent-Service Corridor
+Kensington-Chinatown,3,Downtown & Entertainment
+Kingsview Village-The Westway,1,Connected Family Neighborhood
+Kingsway South,0,Frequent-Service Corridor
+L'Amoreaux West,2,Quiet Low-Density Residential
+Lambton Baby Point,2,Quiet Low-Density Residential
+Lansing-Westgate,1,Connected Family Neighborhood
+Lawrence Park North,2,Quiet Low-Density Residential
+Lawrence Park South,2,Quiet Low-Density Residential
+Leaside-Bennington,1,Connected Family Neighborhood
+Little Portugal,0,Frequent-Service Corridor
+Long Branch,2,Quiet Low-Density Residential
+Malvern East,1,Connected Family Neighborhood
+Malvern West,1,Connected Family Neighborhood
+Maple Leaf,2,Quiet Low-Density Residential
+Markland Wood,2,Quiet Low-Density Residential
+Milliken,5,Transit-Rich Suburban
+Mimico-Queensway,3,Downtown & Entertainment
+Morningside,1,Connected Family Neighborhood
+Morningside Heights,5,Transit-Rich Suburban
+Moss Park,3,Downtown & Entertainment
+Mount Dennis,2,Quiet Low-Density Residential
+Mount Olive-Silverstone-Jamestown,1,Connected Family Neighborhood
+Mount Pleasant East,2,Quiet Low-Density Residential
+New Toronto,2,Quiet Low-Density Residential
+Newtonbrook East,1,Connected Family Neighborhood
+Newtonbrook West,1,Connected Family Neighborhood
+North Riverdale,0,Frequent-Service Corridor
+North St.James Town,6,High-Density Urban Core
+North Toronto,6,High-Density Urban Core
+O'Connor-Parkview,1,Connected Family Neighborhood
+Oakdale-Beverley Heights,5,Transit-Rich Suburban
+Oakridge,0,Frequent-Service Corridor
+Oakwood Village,0,Frequent-Service Corridor
+Old East York,2,Quiet Low-Density Residential
+Palmerston-Little Italy,2,Quiet Low-Density Residential
+Parkwoods-O'Connor Hills,2,Quiet Low-Density Residential
+Pelmo Park-Humberlea,1,Connected Family Neighborhood
+Playter Estates-Danforth,0,Frequent-Service Corridor
+Pleasant View,2,Quiet Low-Density Residential
+Princess-Rosethorn,2,Quiet Low-Density Residential
+Regent Park,6,High-Density Urban Core
+Rexdale-Kipling,2,Quiet Low-Density Residential
+Rockcliffe-Smythe,1,Connected Family Neighborhood
+Roncesvalles,0,Frequent-Service Corridor
+Rosedale-Moore Park,5,Transit-Rich Suburban
+Runnymede-Bloor West Village,2,Quiet Low-Density Residential
+Rustic,2,Quiet Low-Density Residential
+Scarborough Village,0,Frequent-Service Corridor
+South Eglinton-Davisville,6,High-Density Urban Core
+South Parkdale,0,Frequent-Service Corridor
+South Riverdale,5,Transit-Rich Suburban
+St Lawrence-East Bayfront-The Islands,5,Transit-Rich Suburban
+St.Andrew-Windfields,1,Connected Family Neighborhood
+Steeles,1,Connected Family Neighborhood
+Stonegate-Queensway,1,Connected Family Neighborhood
+Tam O'Shanter-Sullivan,1,Connected Family Neighborhood
+Taylor-Massey,2,Quiet Low-Density Residential
+The Beaches,1,Connected Family Neighborhood
+Thistletown-Beaumond Heights,2,Quiet Low-Density Residential
+Thorncliffe Park,0,Frequent-Service Corridor
+Trinity-Bellwoods,2,Quiet Low-Density Residential
+University,2,Quiet Low-Density Residential
+Victoria Village,1,Connected Family Neighborhood
+Wellington Place,6,High-Density Urban Core
+West Hill,1,Connected Family Neighborhood
+West Humber-Clairville,4,Major Transit Hub
+West Queen West,0,Frequent-Service Corridor
+West Rouge,1,Connected Family Neighborhood
+Westminster-Branson,2,Quiet Low-Density Residential
+Weston,1,Connected Family Neighborhood
+Weston-Pelham Park,2,Quiet Low-Density Residential
+Wexford/Maryvale,5,Transit-Rich Suburban
+Willowdale West,2,Quiet Low-Density Residential
+Willowridge-Martingrove-Richview,1,Connected Family Neighborhood
+Woburn North,1,Connected Family Neighborhood
+Woodbine Corridor,2,Quiet Low-Density Residential
+Woodbine-Lumsden,2,Quiet Low-Density Residential
+Wychwood,2,Quiet Low-Density Residential
+Yonge-Bay Corridor,3,Downtown & Entertainment
+Yonge-Doris,6,High-Density Urban Core
+Yonge-Eglinton,0,Frequent-Service Corridor
+Yonge-St.Clair,2,Quiet Low-Density Residential
+York University Heights,4,Major Transit Hub
+Yorkdale-Glen Park,5,Transit-Rich Suburban
