@@ -1,7 +1,17 @@
 .env
+.venv/
+env/
 data/venv
 data/.ipynb_checkpoints
 data/source-files
 
 training/.ipynb_checkpoints
 training/.venv
+
+notebooks/.ipynb_checkpoints
+
+# Large binary model artifacts (regenerate with: python3 models/train_tier_classifier.py)
+models/*.pkl
+
+__pycache__/
+*.pyc
