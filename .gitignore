@@ -1,4 +1,5 @@
 .env
+.cursor/
 .venv/
 env/
 data/venv
