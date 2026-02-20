@@ -1,0 +1,63 @@
+---
+description: Backend patterns - controllers, services, queues, middleware
+globs: "**/*.js"
+alwaysApply: false
+---
+
+# Backend Patterns
+
+## Controller Pattern
+```javascript
+const logger = require('@Logger').createLogger('exampleController');
+
+class ExampleController {
+  constructor() {
+    this.methodName = this.methodName.bind(this);
+  }
+
+  async methodName(req, res) {
+    try {
+      const userId = req.user._id;
+      res.status(200).json({ data });
+    } catch (error) {
+      logger.error('[methodName] Error', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  }
+}
+
+module.exports = new ExampleController();
+```
+
+## Service Pattern (Singleton)
+```javascript
+class ExampleService {
+  constructor() {
+    this.queue = exampleQueue;
+  }
+  async processItem(itemId) { /* ... */ }
+}
+module.exports = new ExampleService();
+```
+
+## Queue/Job Processor
+```javascript
+async function processExampleJob(job) {
+  const { itemId } = job.data;
+  // Process and return result
+  return { processed: true, itemId };
+}
+module.exports = processExampleJob;
+```
+
+## Routes with Permission Middleware
+```javascript
+const { ensureAuthenticated, requirePermission } = require('@Middlewares');
+
+router.get('/admin/users', ensureAuthenticated, requirePermission('admin.users:read'), controller.list);
+```
+
+## Logging
+- Scoped: `const logger = require('@Logger').createLogger('moduleName');`
+- Prefix: `logger.debug('[methodName] Message');`
+- Context: `logger.error('[methodName] Failed', { userId, error });`
