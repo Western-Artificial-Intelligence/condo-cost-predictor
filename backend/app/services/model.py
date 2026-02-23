@@ -7,6 +7,13 @@ from typing import Any
 import joblib
 import pandas as pd
 
+try:
+    from shapely import wkt as shapely_wkt
+    from shapely.geometry import mapping as shapely_mapping
+except Exception:  # pragma: no cover - optional fallback when shapely is absent
+    shapely_wkt = None
+    shapely_mapping = None
+
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 MODELS_DIR = PROJECT_ROOT / "models"
 DATA_DIR = PROJECT_ROOT / "data" / "processed_data"
@@ -15,32 +22,7 @@ MODEL_PATH = MODELS_DIR / "tier_classifier.pkl"
 LABEL_ENCODER_PATH = MODELS_DIR / "label_encoder.pkl"
 NEIGHBORHOODS_PATH = DATA_DIR / "neighborhoods_2024.csv"
 CLUSTERS_PATH = DATA_DIR / "cluster_assignments.csv"
-
-BASE_NUMERIC_FEATURES = [
-    "area_sq_meters",
-    "perimeter_meters",
-    "park_count",
-    "ASSAULT_RATE",
-    "AUTOTHEFT_RATE",
-    "ROBBERY_RATE",
-    "THEFTOVER_RATE",
-    "POPULATION",
-    "total_stop_count",
-    "avg_stop_frequency",
-    "max_stop_frequency",
-    "total_line_length_meters",
-    "transit_line_density",
-    "distinct_route_count",
-]
-
-ENGINEERED_FEATURES = [
-    "park_density",
-    "pop_density",
-    "transit_per_capita",
-    "total_crime_rate",
-    "compactness",
-    "routes_per_stop",
-]
+MASTER_HISTORY_PATH = DATA_DIR / "toronto_master_2010_2024.csv"
 
 TIER_FALLBACK = {1: "Budget", 2: "Moderate", 3: "Expensive", 4: "Premium"}
 
@@ -74,6 +56,16 @@ def _to_native(value: Any) -> Any:
     return value.item() if hasattr(value, "item") else value
 
 
+def _wkt_to_geojson(wkt_text: str) -> dict[str, Any] | None:
+    if not wkt_text or shapely_wkt is None or shapely_mapping is None:
+        return None
+    try:
+        geom = shapely_wkt.loads(wkt_text)
+        return shapely_mapping(geom)
+    except Exception:
+        return None
+
+
 @lru_cache(maxsize=1)
 def _load_model_bundle() -> dict[str, Any]:
     return joblib.load(MODEL_PATH)
@@ -92,9 +84,9 @@ def _load_data() -> dict[str, Any]:
     model_bundle = _load_model_bundle()
     label_encoder = _load_label_encoder()
 
-    canonical_by_key: dict[str, str] = {}
-    for name in neighborhoods["AREA_NAME"].tolist():
-        canonical_by_key[name.strip().lower()] = name
+    canonical_by_key = {
+        name.strip().lower(): name for name in neighborhoods["AREA_NAME"].tolist()
+    }
 
     neighborhoods_for_model = _engineer_features(neighborhoods)
     neighborhoods_for_model["CLASSIFICATION_CODE"] = label_encoder.transform(
@@ -123,6 +115,61 @@ def _load_data() -> dict[str, Any]:
     }
 
 
+@lru_cache(maxsize=1)
+def _prediction_lookup() -> dict[str, dict[str, Any]]:
+    bundle = _load_model_bundle()
+    data = _load_data()
+    model = bundle["model"]
+    feature_columns = data["feature_columns"]
+
+    X = data["neighborhoods_model"][feature_columns]
+    raw_preds = model.predict(X)
+    prob_matrix = model.predict_proba(X)
+    class_labels = list(model.classes_)
+
+    tier_labels_raw = bundle.get("tier_labels", TIER_FALLBACK)
+    tier_labels = {int(k): v for k, v in tier_labels_raw.items()}
+
+    predictions: dict[str, dict[str, Any]] = {}
+    names = data["neighborhoods_model"]["AREA_NAME"].tolist()
+    for idx, name in enumerate(names):
+        raw_pred = raw_preds[idx]
+        predicted_tier = (
+            int(raw_pred) + 1 if bundle.get("is_xgboost") else int(raw_pred)
+        )
+        probs_by_tier: dict[int, float] = {}
+        for cls, prob in zip(class_labels, prob_matrix[idx]):
+            tier = int(cls) + 1 if bundle.get("is_xgboost") else int(cls)
+            probs_by_tier[tier] = float(prob)
+
+        predictions[name] = {
+            "predicted_tier": predicted_tier,
+            "tier_label": tier_labels.get(predicted_tier, str(predicted_tier)),
+            "confidence": probs_by_tier.get(predicted_tier, max(probs_by_tier.values())),
+            "model": bundle.get("model_name", "unknown"),
+        }
+    return predictions
+
+
+@lru_cache(maxsize=1)
+def _load_history() -> pd.DataFrame:
+    history = pd.read_csv(
+        MASTER_HISTORY_PATH, usecols=["AREA_NAME", "YEAR", "avg_rent_1br"]
+    )
+    history = history.dropna(subset=["AREA_NAME", "YEAR", "avg_rent_1br"]).copy()
+    history["YEAR"] = pd.to_numeric(history["YEAR"], errors="coerce")
+    history["avg_rent_1br"] = pd.to_numeric(history["avg_rent_1br"], errors="coerce")
+    history = history.dropna(subset=["YEAR", "avg_rent_1br"]).copy()
+    history["YEAR"] = history["YEAR"].astype(int)
+
+    # Master CSV has duplicate rows for some years (notably 2017); average by year.
+    return (
+        history.groupby(["AREA_NAME", "YEAR"], as_index=False)["avg_rent_1br"]
+        .mean()
+        .sort_values(["AREA_NAME", "YEAR"])
+    )
+
+
 def _resolve_neighbourhood_name(name: str) -> str:
     canonical = _load_data()["canonical_by_key"].get(name.strip().lower())
     if canonical is None:
@@ -131,38 +178,35 @@ def _resolve_neighbourhood_name(name: str) -> str:
 
 
 def _predict_from_row(canonical_name: str) -> dict[str, Any]:
-    bundle = _load_model_bundle()
-    data = _load_data()
-    model = bundle["model"]
-    feature_columns = data["feature_columns"]
-
-    row = data["neighborhoods_model"].loc[
-        data["neighborhoods_model"]["AREA_NAME"] == canonical_name
-    ]
-    if row.empty:
+    prediction = _prediction_lookup().get(canonical_name)
+    if prediction is None:
         raise NeighbourhoodNotFoundError(f"Unknown neighbourhood: {canonical_name}")
+    return dict(prediction)
 
-    X = row.iloc[[0]][feature_columns]
 
-    raw_pred = model.predict(X)[0]
-    predicted_tier = int(raw_pred) + 1 if bundle.get("is_xgboost") else int(raw_pred)
-
-    probs = model.predict_proba(X)[0]
-    class_labels = list(model.classes_)
-    probs_by_tier: dict[int, float] = {}
-    for cls, prob in zip(class_labels, probs):
-        tier = int(cls) + 1 if bundle.get("is_xgboost") else int(cls)
-        probs_by_tier[tier] = float(prob)
-
-    tier_labels_raw = bundle.get("tier_labels", TIER_FALLBACK)
-    tier_labels = {int(k): v for k, v in tier_labels_raw.items()}
-
-    return {
-        "predicted_tier": predicted_tier,
-        "tier_label": tier_labels.get(predicted_tier, str(predicted_tier)),
-        "confidence": probs_by_tier.get(predicted_tier, max(probs_by_tier.values())),
-        "model": bundle.get("model_name", "unknown"),
-    }
+@lru_cache(maxsize=1)
+def _map_data_payload() -> list[dict[str, Any]]:
+    data = _load_data()
+    payload: list[dict[str, Any]] = []
+    for row in data["neighborhoods_raw"].itertuples(index=False):
+        name = row.AREA_NAME
+        prediction = _predict_from_row(name)
+        cluster = data["clusters_by_name"].get(
+            name, {"cluster_id": -1, "cluster_label": "Unknown"}
+        )
+        payload.append(
+            {
+                "neighbourhood": name,
+                "geometry": _wkt_to_geojson(getattr(row, "geometry_wkt", "")),
+                "avg_rent_1br": float(row.avg_rent_1br),
+                "cluster_id": cluster["cluster_id"],
+                "cluster_label": cluster["cluster_label"],
+                "predicted_tier": prediction["predicted_tier"],
+                "tier_label": prediction["tier_label"],
+                "confidence": prediction["confidence"],
+            }
+        )
+    return payload
 
 
 def list_neighbourhoods() -> list[dict[str, Any]]:
@@ -199,6 +243,17 @@ def neighbourhood_detail(name: str) -> dict[str, Any]:
     }
 
 
+def neighbourhood_history(name: str) -> dict[str, Any]:
+    canonical_name = _resolve_neighbourhood_name(name)
+    history = _load_history()
+    history_rows = history.loc[history["AREA_NAME"] == canonical_name].sort_values("YEAR")
+    points = [
+        {"year": int(row.YEAR), "avg_rent_1br": float(row.avg_rent_1br)}
+        for row in history_rows.itertuples(index=False)
+    ]
+    return {"neighbourhood": canonical_name, "history": points}
+
+
 def clusters() -> list[dict[str, Any]]:
     groups = _load_data()["cluster_groups"]
     return [
@@ -210,6 +265,10 @@ def clusters() -> list[dict[str, Any]]:
         }
         for row in groups.itertuples(index=False)
     ]
+
+
+def map_data() -> list[dict[str, Any]]:
+    return list(_map_data_payload())
 
 
 def affordable_neighbourhoods(annual_income: float) -> dict[str, Any]:
@@ -225,7 +284,9 @@ def affordable_neighbourhoods(annual_income: float) -> dict[str, Any]:
     for row in affordable.itertuples(index=False):
         name = row.AREA_NAME
         prediction = _predict_from_row(name)
-        cluster = data["clusters_by_name"].get(name, {"cluster_id": -1, "cluster_label": "Unknown"})
+        cluster = data["clusters_by_name"].get(
+            name, {"cluster_id": -1, "cluster_label": "Unknown"}
+        )
         results.append(
             {
                 "neighbourhood": name,
