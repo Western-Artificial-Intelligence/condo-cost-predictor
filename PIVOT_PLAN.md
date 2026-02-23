@@ -170,17 +170,19 @@ For the tier classifier, use ONLY these as input features:
 
 ---
 
-### Day 4 (Feb 23): Frontend — Map + Explorer
+### Day 4 (Feb 23): Frontend — Map + Explorer -- DONE
 
 **Owner:** Kevin / Streamlit person
 
-- [ ] Replace current Streamlit app with new layout:
+- [x] Replace current Streamlit app with new layout:
   - **Map view** (Folium): neighborhoods colored by rent tier or cluster
   - **Neighborhood detail panel**: rent history chart (15 years), crime stats, transit stats, predicted tier
   - **Affordability filter**: income input, map highlights affordable neighborhoods
   - **"Find similar"**: select a neighborhood, show its cluster members
-- [ ] Wire up to backend API endpoints
-- [ ] Style and polish
+- [x] Wire up to backend API endpoints
+- [x] Style and polish
+
+**Backend additions:** `GET /api/map-data` (geometry + tier + cluster), `GET /api/neighbourhood/{name}/history` (15-year rent history)
 
 ---
 
