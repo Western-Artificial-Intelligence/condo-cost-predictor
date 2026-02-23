@@ -157,16 +157,16 @@ For the tier classifier, use ONLY these as input features:
 
 ---
 
-### Day 3 (Feb 22): API + Backend Integration
+### Day 3 (Feb 22): API + Backend Integration -- DONE
 
 **Owner:** besma / Kevin
 
-- [ ] Update `PredictRequest` schema: take `neighbourhood` (required), return tier prediction + confidence
-- [ ] Load trained classifier in `backend/app/services/model.py`
-- [ ] `GET /api/neighbourhood/{name}` — full feature profile + cluster + predicted tier
-- [ ] `GET /api/clusters` — cluster definitions and member neighborhoods
-- [ ] `GET /api/affordable?income=X` — neighborhoods affordable at given income (30% of gross rule)
-- [ ] Test all endpoints manually
+- [x] Update `PredictRequest` schema: take `neighbourhood` (required), return tier prediction + confidence
+- [x] Load trained classifier in `backend/app/services/model.py`
+- [x] `GET /api/neighbourhood/{name}` — full feature profile + cluster + predicted tier
+- [x] `GET /api/clusters` — cluster definitions and member neighborhoods
+- [x] `GET /api/affordable?income=X` — neighborhoods affordable at given income (30% of gross rule)
+- [x] Test all endpoints manually
 
 ---
 
