@@ -157,30 +157,32 @@ For the tier classifier, use ONLY these as input features:
 
 ---
 
-### Day 3 (Feb 22): API + Backend Integration
+### Day 3 (Feb 22): API + Backend Integration -- DONE
 
 **Owner:** besma / Kevin
 
-- [ ] Update `PredictRequest` schema: take `neighbourhood` (required), return tier prediction + confidence
-- [ ] Load trained classifier in `backend/app/services/model.py`
-- [ ] `GET /api/neighbourhood/{name}` — full feature profile + cluster + predicted tier
-- [ ] `GET /api/clusters` — cluster definitions and member neighborhoods
-- [ ] `GET /api/affordable?income=X` — neighborhoods affordable at given income (30% of gross rule)
-- [ ] Test all endpoints manually
+- [x] Update `PredictRequest` schema: take `neighbourhood` (required), return tier prediction + confidence
+- [x] Load trained classifier in `backend/app/services/model.py`
+- [x] `GET /api/neighbourhood/{name}` — full feature profile + cluster + predicted tier
+- [x] `GET /api/clusters` — cluster definitions and member neighborhoods
+- [x] `GET /api/affordable?income=X` — neighborhoods affordable at given income (30% of gross rule)
+- [x] Test all endpoints manually
 
 ---
 
-### Day 4 (Feb 23): Frontend — Map + Explorer
+### Day 4 (Feb 23): Frontend — Map + Explorer -- DONE
 
 **Owner:** Kevin / Streamlit person
 
-- [ ] Replace current Streamlit app with new layout:
+- [x] Replace current Streamlit app with new layout:
   - **Map view** (Folium): neighborhoods colored by rent tier or cluster
   - **Neighborhood detail panel**: rent history chart (15 years), crime stats, transit stats, predicted tier
   - **Affordability filter**: income input, map highlights affordable neighborhoods
   - **"Find similar"**: select a neighborhood, show its cluster members
-- [ ] Wire up to backend API endpoints
-- [ ] Style and polish
+- [x] Wire up to backend API endpoints
+- [x] Style and polish
+
+**Backend additions:** `GET /api/map-data` (geometry + tier + cluster), `GET /api/neighbourhood/{name}/history` (15-year rent history)
 
 ---
 
