@@ -241,6 +241,13 @@ Separately, we clustered the 158 neighborhoods using K-Means on standardized ver
 
 \section{Results}
 
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/cv_comparison.png}
+\caption{Cross-validated macro F1 across three model families and two CV strategies. All StratifiedKFold results converge to a narrow band (0.73--0.74), with overlapping error bars, providing evidence that the performance ceiling is data-driven rather than algorithm-driven.}
+\label{fig:cv_comparison}
+\end{figure*}
+
 \subsection{Cross-Validation Results}
 
 \begin{table}[H]
@@ -289,6 +296,13 @@ Premium & 0.70 & 0.76 & 0.73 & [0.66, 0.79] \\ \hline
 
 Premium neighborhoods are easiest to predict (F1 = 0.73) due to distinctive characteristics (high density, high transit access). Middle tiers are hardest because neighborhoods near the 50th percentile boundary are genuinely ambiguous.
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\columnwidth]{figures/bootstrap_f1.png}
+\caption{Bootstrap distribution of macro F1 (2,000 resamples of the test set). The 95\% CI (shaded) spans 0.560--0.644.}
+\label{fig:bootstrap}
+\end{figure}
+
 \subsection{Confusion Matrix}
 
 \begin{table}[H]
@@ -306,9 +320,50 @@ Premium neighborhoods are easiest to predict (F1 = 0.73) due to distinctive char
 
 The off-diagonal mass is concentrated on adjacent tiers. Budget neighborhoods are misclassified as Moderate (29 cases) far more often than as Premium (5 cases), confirming that the model's errors are ordinal in nature.
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\columnwidth]{figures/confusion_matrix.png}
+\caption{Confusion matrix for the selected GradientBoosting model on the held-out test set (2020--2022). The strong diagonal and adjacent-tier error pattern are visible.}
+\label{fig:confusion_matrix}
+\end{figure}
+
 \subsection{The CV--Test Gap}
 
 The CV F1 (0.740) exceeds the test F1 (0.604) by 0.136 points. We attribute this to: (1) the static-feature limitation---the model learns neighborhood identity signals that hold within 2010--2019 but cannot explain market shifts in 2020--2022; and (2) distributional shift from pandemic-era disruption (suburban demand increase, downtown vacancy spike). This gap is a quantifiable result: it measures exactly how much predictive power is lost when features cannot capture temporal dynamics.
+
+\subsection{Ablation: CLASSIFICATION\_CODE}
+
+\texttt{CLASSIFICATION\_CODE} is a City of Toronto designation that labels 33 neighborhoods as Neighbourhood Improvement Areas (NIA) and 10 as Emerging Neighbourhoods (EN); the remaining 115 have no designation. SHAP analysis ranks it as the most-used feature (Fig.~\ref{fig:cv_comparison}), raising the question of whether the model is relying on a government-assigned socioeconomic label rather than learning from raw neighborhood characteristics.
+
+To test this, we ran the full search pipeline (60 configurations, 2 CV strategies, bootstrap CIs) with and without \texttt{CLASSIFICATION\_CODE}:
+
+\begin{table}[H]
+\centering
+\caption{Ablation: impact of removing \texttt{CLASSIFICATION\_CODE}.}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Metric} & \textbf{With (21)} & \textbf{Without (20)} & \textbf{$\Delta$} \\ \hline
+CV F1 & 0.7400 & 0.7389 & $-$0.001 \\ \hline
+Test Accuracy & 60.1\% & 58.6\% & $-$1.5pp \\ \hline
+Test Macro F1 & 0.604 & 0.591 & $-$0.013 \\ \hline
+Test F1 95\% CI & [0.560, 0.644] & [0.547, 0.633] & overlap \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Per-tier F1 with and without \texttt{CLASSIFICATION\_CODE}.}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Tier} & \textbf{With} & \textbf{Without} & \textbf{$\Delta$} \\ \hline
+Budget & 0.622 & 0.602 & $-$0.021 \\ \hline
+Moderate & 0.525 & 0.521 & $-$0.004 \\ \hline
+Expensive & 0.539 & 0.522 & $-$0.017 \\ \hline
+Premium & 0.730 & 0.719 & $-$0.011 \\ \hline
+\end{tabular}
+\end{table}
+
+Removing the feature costs only 0.013 F1 points on the test set---well within the 95\% CI---and essentially zero on cross-validation ($-$0.001). The same model family (GBM) and CV strategy (StratifiedKFold) win in both cases. This confirms that \texttt{CLASSIFICATION\_CODE} is a convenient shortcut that the tree models exploit, but the information it encodes (low-income vs.\ other) is already captured redundantly by \texttt{park\_density}, \texttt{pop\_density}, and transit features. The model's performance is driven by genuine neighborhood characteristics, not by the government designation.
 
 \subsection{Clustering}
 
@@ -335,7 +390,14 @@ High-Density Urban Core & 10 & Very high density \\ \hline
 
 \subsection{What the Model Learns}
 
-The model learns a mapping from neighborhood characteristics to affordability tier. SHAP analysis reveals that \texttt{park\_density}, \texttt{pop\_density}, and transit features are the strongest predictors, aligning with urban economics intuition: dense neighborhoods with good transit access and green space command higher rents. However, the model cannot learn \textit{transitions}---a neighborhood undergoing gentrification looks identical to a stable neighborhood in our feature space because those dynamics are not captured by static features.
+The model learns a mapping from neighborhood characteristics to affordability tier. SHAP analysis (Fig.~\ref{fig:shap}) ranks \texttt{CLASSIFICATION\_CODE} (a city socioeconomic designation) as the most-used feature, followed by \texttt{park\_density}, \texttt{pop\_density}, and transit features. However, the ablation study (Section~III-F) demonstrates that \texttt{CLASSIFICATION\_CODE} is redundant: removing it costs only 0.013 F1 points (Table~IX). The model's true predictive signal comes from density and transit features, aligning with urban economics intuition---dense neighborhoods with good transit access and green space command higher rents. The model cannot learn \textit{transitions}---a neighborhood undergoing gentrification looks identical to a stable neighborhood in our feature space because those dynamics are not captured by static features.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\columnwidth]{figures/shap_importance.png}
+\caption{SHAP feature importance (mean $|$SHAP value$|$). \texttt{CLASSIFICATION\_CODE} ranks highest, but ablation (Table~IX) shows removing it costs only 0.013 F1---the information is captured redundantly by density and transit features.}
+\label{fig:shap}
+\end{figure}
 
 \subsection{Practical Utility}
 
