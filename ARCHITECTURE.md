@@ -40,7 +40,7 @@ graph TB
     end
 
     subgraph mlLayer [ML Layer]
-        TierModel["Tier Classifier<br/>XGBoost / Random Forest<br/>Predicts tier 2 years ahead"]
+        TierModel["Tier Classifier<br/>GradientBoosting<br/>CV search + bootstrap CIs<br/>Predicts tier 2 years ahead"]
         Clustering["K-Means Clustering<br/>Groups similar neighborhoods"]
     end
 
@@ -217,35 +217,48 @@ Output: Tier 1-4 (Budget / Moderate / Expensive / Premium)
 | `compactness` (perimeter^2 / area) | varies | Irregular shapes often straddle different zones |
 | `routes_per_stop` (routes / stops) | varies | Measures transit connectivity, not just stop count |
 
-**Model selection:** We trained both XGBoost and Random Forest with a hyperparameter sweep, then picked the best by macro F1 score. Random Forest won.
+**Model selection:** We ran a randomized hyperparameter search across 3 model families (RandomForest, XGBoost, GradientBoosting) with 10 random configurations each, evaluated under 2 cross-validation strategies (StratifiedKFold and TimeSeriesSplit), for 60 total configurations and 300 model fits. The best was selected by cross-validated macro F1.
 
-**Results (on test set, 2020-2022):**
+**Cross-validated results (on training set, 2010-2019):**
 
-| Model | Accuracy | Macro F1 |
-|-------|----------|----------|
-| Random Forest (selected) | 64.8% | 0.651 |
-| XGBoost | 61.8% | 0.622 |
+| Model | CV Strategy | Best CV F1 | Std |
+|-------|-------------|-----------|-----|
+| **GradientBoosting (selected)** | **StratifiedKFold** | **0.7400** | **0.0327** |
+| RandomForest | StratifiedKFold | 0.7339 | 0.0315 |
+| XGBoost | StratifiedKFold | 0.7324 | 0.0247 |
 
-Per-tier performance (Random Forest):
+All three model families converge to similar CV F1 (0.73-0.74), confirming the performance ceiling is driven by feature limitations, not algorithm choice.
 
-| Tier | Precision | Recall | F1 |
-|------|-----------|--------|----|
-| Budget | 0.75 | 0.69 | 0.71 |
-| Moderate | 0.55 | 0.66 | 0.60 |
-| Expensive | 0.59 | 0.52 | 0.55 |
-| Premium | 0.73 | 0.75 | 0.74 |
+**Held-out test results (2020-2022) with 95% bootstrapped confidence intervals:**
 
-65% accuracy is 2.6x better than random guessing (25% for 4 classes). Most errors are between adjacent tiers (Budget<->Moderate, Expensive<->Premium) — neighborhoods near a tier boundary could plausibly go either way. The model cannot capture temporal dynamics (gentrification, new transit lines) because those aren't in the features.
+| Metric | Value | 95% CI |
+|--------|-------|--------|
+| Accuracy | 60.1% | [55.7%, 64.3%] |
+| Macro F1 | 0.604 | [0.560, 0.644] |
+
+Per-tier performance (GradientBoosting):
+
+| Tier | Precision | Recall | F1 | 95% CI |
+|------|-----------|--------|----|--------|
+| Budget | 0.64 | 0.60 | 0.62 | [0.550, 0.691] |
+| Moderate | 0.52 | 0.53 | 0.53 | [0.445, 0.596] |
+| Expensive | 0.55 | 0.53 | 0.54 | [0.460, 0.610] |
+| Premium | 0.70 | 0.76 | 0.73 | [0.660, 0.790] |
+
+60% accuracy is 2.4x better than random guessing (25% for 4 classes). Most errors are between adjacent tiers (Budget<->Moderate, Expensive<->Premium) — neighborhoods near a tier boundary could plausibly go either way. The CV-test gap (0.74 vs 0.60) quantifies the cost of the static-feature limitation: the model generalizes within the training period but cannot capture the distributional shift in 2020-2022 (pandemic-era market disruption).
 
 SHAP analysis shows park_density, pop_density, and transit features are the strongest predictors of affordability tier.
 
 **Artifacts:**
-- `models/tier_classifier.pkl` — model bundle (Random Forest + metadata)
+- `models/tier_classifier.pkl` — model bundle (GradientBoosting + metadata + CIs)
 - `models/label_encoder.pkl` — LabelEncoder for `CLASSIFICATION_CODE`
+- `models/experiment_results.json` — full search results (60 configs, per-fold scores, bootstrap CIs)
+- `models/experiment_summary.csv` — ranked leaderboard of all configurations
+- `models/experiment_summary.md` — formatted experiment report
 
 **Code:**
-- `models/train_tier_classifier.py` — standalone training script (reproducible)
-- `notebooks/day2_model_and_clustering.ipynb` — full notebook with visualizations
+- `models/train_tier_classifier.py` — standalone training script with search + bootstrap pipeline
+- `notebooks/day2_model_and_clustering.ipynb` — exploratory notebook with visualizations
 
 ### Neighborhood Clustering
 
@@ -359,10 +372,13 @@ condo-cost-predictor/
     models/
       xgb_model_1.pkl ...          -- Trained model artifacts (old approach)
   models/
-    train_tier_classifier.py        -- Day 2 training script (tier classifier + clustering)
-    tier_classifier.pkl             -- Trained Random Forest model bundle
+    train_tier_classifier.py        -- Training script (CV search + bootstrap + clustering)
+    tier_classifier.pkl             -- Trained GradientBoosting model bundle
     label_encoder.pkl               -- LabelEncoder for CLASSIFICATION_CODE
     scaler.pkl                      -- StandardScaler for clustering features
+    experiment_results.json         -- Full search results (60 configs, per-fold scores, CIs)
+    experiment_summary.csv          -- Ranked leaderboard of all configurations
+    experiment_summary.md           -- Formatted experiment report
     XGBoost_scaffold.py             -- Quantile regression template (old approach)
     features_documentation.md       -- Feature descriptions
   notebooks/

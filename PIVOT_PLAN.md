@@ -137,12 +137,14 @@ For the tier classifier, use ONLY these as input features:
 **Deliverables:** `.pkl` model file, cluster CSV, documented accuracy/confusion matrix
 
 **Results:**
-- Best model: **Random Forest** (64.8% accuracy, 0.651 macro F1)
-- XGBoost comparison: 61.8% accuracy, 0.622 macro F1
+- Randomized hyperparameter search: 3 model families x 2 CV strategies x 10 configs = 60 configurations, 300 total model fits
+- Best model: **GradientBoosting** (CV F1 = 0.7400 +/- 0.0327 via StratifiedKFold)
+- All three model families converge to similar CV F1 (0.73-0.74), confirming the ceiling is data-driven
+- Test accuracy: **60.1% (95% CI: 55.7%-64.3%)**, macro F1: **0.604 (95% CI: 0.560-0.644)**
 - Feature engineering added 6 ratio features (park_density, pop_density, etc.) — park_density alone has 0.47 correlation with target vs 0.01 for raw park_count
 - Most errors are between adjacent tiers (Budget<->Moderate, Expensive<->Premium) — neighborhoods near tier boundaries could go either way
-- Premium tier is easiest to predict (0.74 F1); Expensive is hardest (0.55 F1)
-- 65% accuracy is 2.6x better than random guessing (25%) and reasonable given features are static proxies
+- Premium tier is easiest to predict (0.73 F1); Moderate is hardest (0.53 F1)
+- CV-test gap (0.74 vs 0.60) quantifies the static-feature limitation and 2020-2022 distributional shift
 - 7 clusters: Frequent-Service Corridor (22), Connected Family Neighborhood (45), Quiet Low-Density Residential (56), Downtown & Entertainment (5), Major Transit Hub (2), Transit-Rich Suburban (18), High-Density Urban Core (10)
 - SHAP analysis shows park_density, pop_density, and transit features are the strongest predictors
 
@@ -150,9 +152,12 @@ For the tier classifier, use ONLY these as input features:
 
 | File | Description |
 |------|-------------|
-| `models/tier_classifier.pkl` | Random Forest model bundle (model + metadata) |
+| `models/tier_classifier.pkl` | GradientBoosting model bundle (model + metadata + CIs) |
 | `models/label_encoder.pkl` | LabelEncoder for CLASSIFICATION_CODE |
 | `models/scaler.pkl` | StandardScaler fitted on clustering features |
+| `models/experiment_results.json` | Full search results (60 configs, per-fold scores, CIs) |
+| `models/experiment_summary.csv` | Ranked leaderboard of all configurations |
+| `models/experiment_summary.md` | Formatted experiment report |
 | `data/processed_data/cluster_assignments.csv` | 158 neighborhoods with cluster IDs and labels |
 
 ---
