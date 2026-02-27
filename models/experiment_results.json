@@ -1,0 +1,1580 @@
+{
+  "experiment_timestamp": "2026-02-27T03:54:43.984494+00:00",
+  "data": {
+    "train_path": "/Users/juangomez/Documents/other SWE projecs/condo-cost-predictor/data/processed_data/train_v2.csv",
+    "test_path": "/Users/juangomez/Documents/other SWE projecs/condo-cost-predictor/data/processed_data/test_v2.csv",
+    "n_train": 1580,
+    "n_test": 474,
+    "n_features": 21,
+    "features": [
+      "area_sq_meters",
+      "perimeter_meters",
+      "park_count",
+      "ASSAULT_RATE",
+      "AUTOTHEFT_RATE",
+      "ROBBERY_RATE",
+      "THEFTOVER_RATE",
+      "POPULATION",
+      "total_stop_count",
+      "avg_stop_frequency",
+      "max_stop_frequency",
+      "total_line_length_meters",
+      "transit_line_density",
+      "distinct_route_count",
+      "park_density",
+      "pop_density",
+      "transit_per_capita",
+      "total_crime_rate",
+      "compactness",
+      "routes_per_stop",
+      "CLASSIFICATION_CODE"
+    ],
+    "target": "TARGET_TIER_2YR"
+  },
+  "search_metadata": {
+    "n_configs_evaluated": 60,
+    "n_model_families": 3,
+    "n_cv_strategies": 2,
+    "n_iter_per_model": 10,
+    "total_search_time_seconds": 824.59,
+    "timestamp": "2026-02-27T03:54:43.984494+00:00",
+    "n_train": 1580,
+    "n_test": 474,
+    "n_features": 21
+  },
+  "best_model": {
+    "model_type": "GradientBoosting",
+    "cv_strategy": "StratifiedKFold",
+    "best_params": {
+      "subsample": 1.0,
+      "n_estimators": 300,
+      "min_samples_leaf": 3,
+      "max_depth": 5,
+      "learning_rate": 0.1
+    },
+    "cv_mean_f1": 0.7399876282144812,
+    "cv_std_f1": 0.032678720252545077,
+    "cv_fold_scores": [
+      0.7702007013167265,
+      0.7421150316983651,
+      0.7499408169977773,
+      0.6774361151016499,
+      0.7602454759578868
+    ]
+  },
+  "test_set_performance": {
+    "accuracy": 0.6012658227848101,
+    "macro_f1": 0.6039779697344901,
+    "per_class_f1": {
+      "Budget": 0.6224066390041494,
+      "Moderate": 0.525,
+      "Expensive": 0.5387755102040817,
+      "Premium": 0.7297297297297297
+    }
+  },
+  "confidence_intervals": {
+    "accuracy": {
+      "mean": 0.6012584388185654,
+      "ci_lower": 0.5569620253164557,
+      "ci_upper": 0.6434599156118144,
+      "std": 0.022179858560288875
+    },
+    "macro_f1": {
+      "mean": 0.6030915974663085,
+      "ci_lower": 0.5596471119399767,
+      "ci_upper": 0.6437986897361214,
+      "std": 0.021738406872705212
+    },
+    "per_class_f1": {
+      "Budget": {
+        "mean": 0.6216816437161271,
+        "ci_lower": 0.5499950199203187,
+        "ci_upper": 0.6907703986678421,
+        "std": 0.03554763290317735
+      },
+      "Moderate": {
+        "mean": 0.5234668631639215,
+        "ci_lower": 0.4453548085901028,
+        "ci_upper": 0.5957446808510638,
+        "std": 0.0389908962918941
+      },
+      "Expensive": {
+        "mean": 0.5378717864299242,
+        "ci_lower": 0.4602471172923174,
+        "ci_upper": 0.6100596113148413,
+        "std": 0.038582790856512894
+      },
+      "Premium": {
+        "mean": 0.7293460965552608,
+        "ci_lower": 0.6595324748040314,
+        "ci_upper": 0.7899261317430197,
+        "std": 0.033551570630413134
+      }
+    },
+    "n_bootstrap": 2000,
+    "ci_level": 0.95,
+    "bootstrap_time_seconds": 35.36
+  },
+  "all_search_results": [
+    {
+      "model_type": "RandomForest",
+      "cv_strategy": "StratifiedKFold",
+      "params": {
+        "n_estimators": 200,
+        "min_samples_split": 10,
+        "min_samples_leaf": 12,
+        "max_features": "log2",
+        "max_depth": 15,
+        "class_weight": "balanced"
+      },
+      "mean_f1_macro": 0.7126049427685831,
+      "std_f1_macro": 0.030001924827356447,
+      "mean_train_f1": 0.7863550759704314,
+      "fold_scores": [
+        0.7011243900268753,
+        0.7349790538572046,
+        0.7359755699312661,
+        0.6584933279091424,
+        0.732452372118427
+      ],
+      "fit_time_seconds": 0.30090508460998533,
+      "rank": 5
+    },
+    {
+      "model_type": "RandomForest",
+      "cv_strategy": "StratifiedKFold",
+      "params": {
+        "n_estimators": 500,
+        "min_samples_split": 10,
+        "min_samples_leaf": 12,
+        "max_features": 0.5,
+        "max_depth": 6,
+        "class_weight": "balanced_subsample"
+      },
+      "mean_f1_macro": 0.6809344527327512,
+      "std_f1_macro": 0.029640167747109338,
+      "mean_train_f1": 0.7419762788700315,
+      "fold_scores": [
+        0.6493171960997159,
+        0.6747391636577521,
+        0.7041485888576481,
+        0.6514286830000924,
+        0.725038632048548
+      ],
+      "fit_time_seconds": 1.3017584323883056,
+      "rank": 10
+    },
+    {
+      "model_type": "RandomForest",
+      "cv_strategy": "StratifiedKFold",
+      "params": {
+        "n_estimators": 500,
+        "min_samples_split": 2,
+        "min_samples_leaf": 8,
+        "max_features": 0.7,
+        "max_depth": null,
+        "class_weight": "balanced"
+      },
+      "mean_f1_macro": 0.7176130321246117,
+      "std_f1_macro": 0.025449317208619735,
+      "mean_train_f1": 0.8055299406990228,
+      "fold_scores": [
+        0.7078951043156859,
+        0.7311655926840562,
+        0.7303666310633279,
+        0.6728498217468806,
+        0.7457880108131076
+      ],
+      "fit_time_seconds": 1.7214449882507323,
+      "rank": 3
+    },
+    {
+      "model_type": "RandomForest",
+      "cv_strategy": "StratifiedKFold",
+      "params": {
+        "n_estimators": 700,
+        "min_samples_split": 2,
+        "min_samples_leaf": 12,
+        "max_features": 0.5,
+        "max_depth": null,
+        "class_weight": "balanced"
+      },
+      "mean_f1_macro": 0.7066069892596683,
+      "std_f1_macro": 0.03049750372045687,
+      "mean_train_f1": 0.7837452391990425,
+      "fold_scores": [
+        0.6984485722335027,
+        0.7224023078370905,
+        0.7257608145167529,
+        0.6507340066594858,
+        0.7356892450515096
+      ],
+      "fit_time_seconds": 1.7728001594543457,
+      "rank": 6
+    },
+    {
+      "model_type": "RandomForest",
+      "cv_strategy": "StratifiedKFold",
+      "params": {
+        "n_estimators": 500,
+        "min_samples_split": 5,
+        "min_samples_leaf": 3,
+        "max_features": 0.5,
+        "max_depth": 10,
+        "class_weight": "balanced_subsample"
+      },
+      "mean_f1_macro": 0.7338661483678182,
+      "std_f1_macro": 0.03148888046537865,
+      "mean_train_f1": 0.8529395182850632,
+      "fold_scores": [
+        0.7208181765942219,
+        0.7484846810000184,
+        0.741937555679864,
+        0.6818108255552896,
+        0.7762795030096966
+      ],
+      "fit_time_seconds": 1.6597215175628661,
+      "rank": 1
+    },
+    {
+      "model_type": "RandomForest",
+      "cv_strategy": "StratifiedKFold",
+      "params": {
+        "n_estimators": 300,
+        "min_samples_split": 10,
+        "min_samples_leaf": 3,
+        "max_features": "log2",
+        "max_depth": null,
+        "class_weight": "balanced_subsample"
+      },
+      "mean_f1_macro": 0.728226152871536,
+      "std_f1_macro": 0.02775856675138154,
+      "mean_train_f1": 0.8420649094873747,
+      "fold_scores": [
+        0.7093624928530589,
+        0.7412728580711037,
+        0.7427906815065836,
+        0.6846334264290921,
+        0.7630713054978416
+      ],
+      "fit_time_seconds": 0.6342576026916504,
+      "rank": 2
+    },
+    {
+      "model_type": "RandomForest",
+      "cv_strategy": "StratifiedKFold",
+      "params": {
+        "n_estimators": 500,
+        "min_samples_split": 10,
+        "min_samples_leaf": 8,
+        "max_features": "log2",
+        "max_depth": 10,
+        "class_weight": "balanced"
+      },
+      "mean_f1_macro": 0.7138548850656294,
+      "std_f1_macro": 0.0284724314968701,
+      "mean_train_f1": 0.7988922354881434,
+      "fold_scores": [
+        0.6998729161760446,
+        0.741407518884454,
+        0.7299500578213036,
+        0.6643833451223878,
+        0.7336605873239566
+      ],
+      "fit_time_seconds": 0.7740477085113525,
+      "rank": 4
+    },
+    {
+      "model_type": "RandomForest",
+      "cv_strategy": "StratifiedKFold",
+      "params": {
+        "n_estimators": 500,
+        "min_samples_split": 2,
+        "min_samples_leaf": 12,
+        "max_features": "log2",
+        "max_depth": 6,
+        "class_weight": "balanced_subsample"
+      },
+      "mean_f1_macro": 0.6943510981737248,
+      "std_f1_macro": 0.03050671801917631,
+      "mean_train_f1": 0.7580764760537002,
+      "fold_scores": [
+        0.6737194048483328,
+        0.7004436843079238,
+        0.7024379418916817,
+        0.6522765679231852,
+        0.7428778918974996
+      ],
+      "fit_time_seconds": 0.844040060043335,
+      "rank": 9
+    },
+    {
+      "model_type": "RandomForest",
+      "cv_strategy": "StratifiedKFold",
+      "params": {
+        "n_estimators": 500,
+        "min_samples_split": 5,
+        "min_samples_leaf": 12,
+        "max_features": 0.5,
+        "max_depth": 8,
+        "class_weight": "balanced"
+      },
+      "mean_f1_macro": 0.7064408286474532,
+      "std_f1_macro": 0.03397503071004336,
+      "mean_train_f1": 0.7767367716855477,
+      "fold_scores": [
+        0.6927089456608628,
+        0.7339276509323174,
+        0.7189246127891986,
+        0.6468061824572489,
+        0.7398367513976376
+      ],
+      "fit_time_seconds": 1.2101866245269775,
+      "rank": 7
+    },
+    {
+      "model_type": "RandomForest",
+      "cv_strategy": "StratifiedKFold",
+      "params": {
+        "n_estimators": 500,
+        "min_samples_split": 5,
+        "min_samples_leaf": 12,
+        "max_features": 0.5,
+        "max_depth": 8,
+        "class_weight": "balanced_subsample"
+      },
+      "mean_f1_macro": 0.7058375375321658,
+      "std_f1_macro": 0.030481376130192472,
+      "mean_train_f1": 0.7759786052238082,
+      "fold_scores": [
+        0.6833152983128752,
+        0.7364253046690878,
+        0.718198082755495,
+        0.657932901195425,
+        0.7333161007279456
+      ],
+      "fit_time_seconds": 1.3923454761505127,
+      "rank": 8
+    },
+    {
+      "model_type": "XGBoost",
+      "cv_strategy": "StratifiedKFold",
+      "params": {
+        "subsample": 1.0,
+        "reg_lambda": 0.5,
+        "reg_alpha": 0.5,
+        "n_estimators": 500,
+        "min_child_weight": 3,
+        "max_depth": 3,
+        "learning_rate": 0.1,
+        "colsample_bytree": 0.6
+      },
+      "mean_f1_macro": 0.7221530242688425,
+      "std_f1_macro": 0.028834149953720748,
+      "mean_train_f1": 0.9415183272694059,
+      "fold_scores": [
+        0.7175191264790588,
+        0.7611828789972503,
+        0.7058967083348087,
+        0.6800419617099397,
+        0.7461244458231546
+      ],
+      "fit_time_seconds": 2.1590120792388916,
+      "rank": 5
+    },
+    {
+      "model_type": "XGBoost",
+      "cv_strategy": "StratifiedKFold",
+      "params": {
+        "subsample": 0.7,
+        "reg_lambda": 5.0,
+        "reg_alpha": 0.01,
+        "n_estimators": 300,
+        "min_child_weight": 7,
+        "max_depth": 3,
+        "learning_rate": 0.01,
+        "colsample_bytree": 0.6
+      },
+      "mean_f1_macro": 0.6732219816059426,
+      "std_f1_macro": 0.03397499454837746,
+      "mean_train_f1": 0.7330564724135012,
+      "fold_scores": [
+        0.6382865032248887,
+        0.6774632888722072,
+        0.673826943947203,
+        0.6431003446501482,
+        0.7334328273352663
+      ],
+      "fit_time_seconds": 1.347774076461792,
+      "rank": 10
+    },
+    {
+      "model_type": "XGBoost",
+      "cv_strategy": "StratifiedKFold",
+      "params": {
+        "subsample": 0.7,
+        "reg_lambda": 1.0,
+        "reg_alpha": 0.01,
+        "n_estimators": 200,
+        "min_child_weight": 1,
+        "max_depth": 3,
+        "learning_rate": 0.1,
+        "colsample_bytree": 0.9
+      },
+      "mean_f1_macro": 0.7175789121564697,
+      "std_f1_macro": 0.02894747890186911,
+      "mean_train_f1": 0.8943718959501263,
+      "fold_scores": [
+        0.7218798886211123,
+        0.7485315664905567,
+        0.7246551020206098,
+        0.6627447417847016,
+        0.7300832618653688
+      ],
+      "fit_time_seconds": 0.9174100399017334,
+      "rank": 8
+    },
+    {
+      "model_type": "XGBoost",
+      "cv_strategy": "StratifiedKFold",
+      "params": {
+        "subsample": 0.9,
+        "reg_lambda": 1.0,
+        "reg_alpha": 0.1,
+        "n_estimators": 300,
+        "min_child_weight": 5,
+        "max_depth": 6,
+        "learning_rate": 0.05,
+        "colsample_bytree": 0.8
+      },
+      "mean_f1_macro": 0.7277377834150688,
+      "std_f1_macro": 0.02437273134887113,
+      "mean_train_f1": 0.9376231536610276,
+      "fold_scores": [
+        0.7315908960833317,
+        0.7484760248983457,
+        0.7056267866436734,
+        0.6946129942884794,
+        0.7583822151615137
+      ],
+      "fit_time_seconds": 2.3991021633148195,
+      "rank": 3
+    },
+    {
+      "model_type": "XGBoost",
+      "cv_strategy": "StratifiedKFold",
+      "params": {
+        "subsample": 0.8,
+        "reg_lambda": 2.0,
+        "reg_alpha": 0.5,
+        "n_estimators": 300,
+        "min_child_weight": 1,
+        "max_depth": 4,
+        "learning_rate": 0.03,
+        "colsample_bytree": 0.6
+      },
+      "mean_f1_macro": 0.7237110531612437,
+      "std_f1_macro": 0.03460691779650122,
+      "mean_train_f1": 0.8643432217579512,
+      "fold_scores": [
+        0.7096581632004417,
+        0.7553433874751874,
+        0.7332875457875457,
+        0.6636052766486197,
+        0.756660892694424
+      ],
+      "fit_time_seconds": 1.7116540908813476,
+      "rank": 4
+    },
+    {
+      "model_type": "XGBoost",
+      "cv_strategy": "StratifiedKFold",
+      "params": {
+        "subsample": 0.9,
+        "reg_lambda": 2.0,
+        "reg_alpha": 0.0,
+        "n_estimators": 300,
+        "min_child_weight": 3,
+        "max_depth": 4,
+        "learning_rate": 0.1,
+        "colsample_bytree": 0.7
+      },
+      "mean_f1_macro": 0.7211598971847399,
+      "std_f1_macro": 0.02470069239401529,
+      "mean_train_f1": 0.9438268045751677,
+      "fold_scores": [
+        0.7177904034493573,
+        0.7388113253539723,
+        0.7116707267655664,
+        0.6825270351429242,
+        0.7549999952118791
+      ],
+      "fit_time_seconds": 1.699131727218628,
+      "rank": 6
+    },
+    {
+      "model_type": "XGBoost",
+      "cv_strategy": "StratifiedKFold",
+      "params": {
+        "subsample": 1.0,
+        "reg_lambda": 0.5,
+        "reg_alpha": 0.1,
+        "n_estimators": 300,
+        "min_child_weight": 1,
+        "max_depth": 6,
+        "learning_rate": 0.01,
+        "colsample_bytree": 0.8
+      },
+      "mean_f1_macro": 0.7323729629329622,
+      "std_f1_macro": 0.024678580960770545,
+      "mean_train_f1": 0.8812536243315314,
+      "fold_scores": [
+        0.7323455471572407,
+        0.7471690457425475,
+        0.7470067717449469,
+        0.6846578202139139,
+        0.7506856298061622
+      ],
+      "fit_time_seconds": 2.473954105377197,
+      "rank": 1
+    },
+    {
+      "model_type": "XGBoost",
+      "cv_strategy": "StratifiedKFold",
+      "params": {
+        "subsample": 1.0,
+        "reg_lambda": 1.0,
+        "reg_alpha": 0.1,
+        "n_estimators": 300,
+        "min_child_weight": 7,
+        "max_depth": 6,
+        "learning_rate": 0.1,
+        "colsample_bytree": 0.8
+      },
+      "mean_f1_macro": 0.72885488585191,
+      "std_f1_macro": 0.027625642987087872,
+      "mean_train_f1": 0.9432897705651879,
+      "fold_scores": [
+        0.7274309455230945,
+        0.7641881916713211,
+        0.705699948258627,
+        0.6920815682324634,
+        0.7548737755740444
+      ],
+      "fit_time_seconds": 2.3271968364715576,
+      "rank": 2
+    },
+    {
+      "model_type": "XGBoost",
+      "cv_strategy": "StratifiedKFold",
+      "params": {
+        "subsample": 1.0,
+        "reg_lambda": 1.0,
+        "reg_alpha": 0.01,
+        "n_estimators": 500,
+        "min_child_weight": 5,
+        "max_depth": 3,
+        "learning_rate": 0.1,
+        "colsample_bytree": 0.6
+      },
+      "mean_f1_macro": 0.7191769109433583,
+      "std_f1_macro": 0.035213952605791625,
+      "mean_train_f1": 0.9375817560644123,
+      "fold_scores": [
+        0.7149760557684377,
+        0.7680504963640771,
+        0.7022266256132346,
+        0.6658045596373484,
+        0.7448268173336943
+      ],
+      "fit_time_seconds": 2.1255064010620117,
+      "rank": 7
+    },
+    {
+      "model_type": "XGBoost",
+      "cv_strategy": "StratifiedKFold",
+      "params": {
+        "subsample": 0.9,
+        "reg_lambda": 0.5,
+        "reg_alpha": 0.0,
+        "n_estimators": 500,
+        "min_child_weight": 1,
+        "max_depth": 3,
+        "learning_rate": 0.01,
+        "colsample_bytree": 0.8
+      },
+      "mean_f1_macro": 0.7011078381726956,
+      "std_f1_macro": 0.04083193604294022,
+      "mean_train_f1": 0.7786927842672645,
+      "fold_scores": [
+        0.6762975831934432,
+        0.7306556669602501,
+        0.718259861051848,
+        0.6339765514333454,
+        0.7463495282245917
+      ],
+      "fit_time_seconds": 2.2531561851501465,
+      "rank": 9
+    },
+    {
+      "model_type": "GradientBoosting",
+      "cv_strategy": "StratifiedKFold",
+      "params": {
+        "subsample": 0.9,
+        "n_estimators": 300,
+        "min_samples_leaf": 8,
+        "max_depth": 5,
+        "learning_rate": 0.1
+      },
+      "mean_f1_macro": 0.7315278318304783,
+      "std_f1_macro": 0.03441320465793479,
+      "mean_train_f1": 0.9477129350155336,
+      "fold_scores": [
+        0.7323087213174606,
+        0.7582462015745374,
+        0.7407218668881663,
+        0.666015874338085,
+        0.7603464950341428
+      ],
+      "fit_time_seconds": 5.0682087421417235,
+      "rank": 4
+    },
+    {
+      "model_type": "GradientBoosting",
+      "cv_strategy": "StratifiedKFold",
+      "params": {
+        "subsample": 0.7,
+        "n_estimators": 700,
+        "min_samples_leaf": 5,
+        "max_depth": 6,
+        "learning_rate": 0.05
+      },
+      "mean_f1_macro": 0.7328820714261057,
+      "std_f1_macro": 0.02016486729177663,
+      "mean_train_f1": 0.9476934135467145,
+      "fold_scores": [
+        0.7370863543789472,
+        0.751803566654841,
+        0.7433527768238752,
+        0.6939093751712074,
+        0.7382582841016576
+      ],
+      "fit_time_seconds": 11.814412832260132,
+      "rank": 3
+    },
+    {
+      "model_type": "GradientBoosting",
+      "cv_strategy": "StratifiedKFold",
+      "params": {
+        "subsample": 0.9,
+        "n_estimators": 500,
+        "min_samples_leaf": 8,
+        "max_depth": 5,
+        "learning_rate": 0.1
+      },
+      "mean_f1_macro": 0.7300766037768757,
+      "std_f1_macro": 0.030228716929571006,
+      "mean_train_f1": 0.947692418031797,
+      "fold_scores": [
+        0.7229398088349263,
+        0.7612716381215933,
+        0.7380875468516624,
+        0.6755295393320557,
+        0.7525544857441409
+      ],
+      "fit_time_seconds": 8.38471336364746,
+      "rank": 6
+    },
+    {
+      "model_type": "GradientBoosting",
+      "cv_strategy": "StratifiedKFold",
+      "params": {
+        "subsample": 1.0,
+        "n_estimators": 300,
+        "min_samples_leaf": 3,
+        "max_depth": 5,
+        "learning_rate": 0.1
+      },
+      "mean_f1_macro": 0.7399876282144812,
+      "std_f1_macro": 0.032678720252545077,
+      "mean_train_f1": 0.9476963396625273,
+      "fold_scores": [
+        0.7702007013167265,
+        0.7421150316983651,
+        0.7499408169977773,
+        0.6774361151016499,
+        0.7602454759578868
+      ],
+      "fit_time_seconds": 5.60613112449646,
+      "rank": 1
+    },
+    {
+      "model_type": "GradientBoosting",
+      "cv_strategy": "StratifiedKFold",
+      "params": {
+        "subsample": 0.7,
+        "n_estimators": 300,
+        "min_samples_leaf": 5,
+        "max_depth": 4,
+        "learning_rate": 0.1
+      },
+      "mean_f1_macro": 0.7350641582616108,
+      "std_f1_macro": 0.03107329197155338,
+      "mean_train_f1": 0.947567450651413,
+      "fold_scores": [
+        0.7369301972988609,
+        0.7549764741300783,
+        0.7433408416087081,
+        0.6758347794718609,
+        0.764238498798546
+      ],
+      "fit_time_seconds": 3.604145956039429,
+      "rank": 2
+    },
+    {
+      "model_type": "GradientBoosting",
+      "cv_strategy": "StratifiedKFold",
+      "params": {
+        "subsample": 0.8,
+        "n_estimators": 500,
+        "min_samples_leaf": 12,
+        "max_depth": 4,
+        "learning_rate": 0.01
+      },
+      "mean_f1_macro": 0.7231602142896825,
+      "std_f1_macro": 0.03132726952875682,
+      "mean_train_f1": 0.8645831331345828,
+      "fold_scores": [
+        0.7205990512409348,
+        0.7549816820026644,
+        0.7313804062019946,
+        0.6649366888439927,
+        0.7439032431588263
+      ],
+      "fit_time_seconds": 6.297433519363404,
+      "rank": 9
+    },
+    {
+      "model_type": "GradientBoosting",
+      "cv_strategy": "StratifiedKFold",
+      "params": {
+        "subsample": 0.9,
+        "n_estimators": 200,
+        "min_samples_leaf": 5,
+        "max_depth": 5,
+        "learning_rate": 0.03
+      },
+      "mean_f1_macro": 0.7292387025768332,
+      "std_f1_macro": 0.03237893487389497,
+      "mean_train_f1": 0.9382456038618155,
+      "fold_scores": [
+        0.7443638304945082,
+        0.746037965865552,
+        0.7246453256576495,
+        0.6690092550191887,
+        0.7621371358472672
+      ],
+      "fit_time_seconds": 3.4285569190979004,
+      "rank": 7
+    },
+    {
+      "model_type": "GradientBoosting",
+      "cv_strategy": "StratifiedKFold",
+      "params": {
+        "subsample": 0.9,
+        "n_estimators": 300,
+        "min_samples_leaf": 5,
+        "max_depth": 8,
+        "learning_rate": 0.1
+      },
+      "mean_f1_macro": 0.7305745143737222,
+      "std_f1_macro": 0.03325396262703235,
+      "mean_train_f1": 0.9477086213153431,
+      "fold_scores": [
+        0.7255921234019705,
+        0.7585178044837539,
+        0.7283464181919248,
+        0.6727550334473565,
+        0.7676611923436055
+      ],
+      "fit_time_seconds": 7.7719762325286865,
+      "rank": 5
+    },
+    {
+      "model_type": "GradientBoosting",
+      "cv_strategy": "StratifiedKFold",
+      "params": {
+        "subsample": 0.9,
+        "n_estimators": 500,
+        "min_samples_leaf": 3,
+        "max_depth": 3,
+        "learning_rate": 0.03
+      },
+      "mean_f1_macro": 0.727946040722197,
+      "std_f1_macro": 0.031616652728012805,
+      "mean_train_f1": 0.9250556145035308,
+      "fold_scores": [
+        0.718901855254803,
+        0.7577798650659087,
+        0.7425903185016773,
+        0.6703293757136022,
+        0.750128789074994
+      ],
+      "fit_time_seconds": 5.3851676940917965,
+      "rank": 8
+    },
+    {
+      "model_type": "GradientBoosting",
+      "cv_strategy": "StratifiedKFold",
+      "params": {
+        "subsample": 1.0,
+        "n_estimators": 300,
+        "min_samples_leaf": 5,
+        "max_depth": 4,
+        "learning_rate": 0.01
+      },
+      "mean_f1_macro": 0.7176111146728317,
+      "std_f1_macro": 0.03528836201784995,
+      "mean_train_f1": 0.8365479935419214,
+      "fold_scores": [
+        0.7025795096332147,
+        0.7433052676160583,
+        0.7568114821354788,
+        0.6568999151630817,
+        0.7284593988163256
+      ],
+      "fit_time_seconds": 4.387351846694946,
+      "rank": 10
+    },
+    {
+      "model_type": "RandomForest",
+      "cv_strategy": "TimeSeriesSplit",
+      "params": {
+        "n_estimators": 200,
+        "min_samples_split": 10,
+        "min_samples_leaf": 12,
+        "max_features": "log2",
+        "max_depth": 15,
+        "class_weight": "balanced"
+      },
+      "mean_f1_macro": 0.645686838210309,
+      "std_f1_macro": 0.034083764371607116,
+      "mean_train_f1": 0.78827818869799,
+      "fold_scores": [
+        0.6121181198922878,
+        0.699565264953525,
+        0.66962858283736,
+        0.6342022715470235,
+        0.6129199518213484
+      ],
+      "fit_time_seconds": 0.21977543830871582,
+      "rank": 10
+    },
+    {
+      "model_type": "RandomForest",
+      "cv_strategy": "TimeSeriesSplit",
+      "params": {
+        "n_estimators": 500,
+        "min_samples_split": 10,
+        "min_samples_leaf": 12,
+        "max_features": 0.5,
+        "max_depth": 6,
+        "class_weight": "balanced_subsample"
+      },
+      "mean_f1_macro": 0.6517602084674976,
+      "std_f1_macro": 0.018277108513555265,
+      "mean_train_f1": 0.7665498956053614,
+      "fold_scores": [
+        0.6792702731616153,
+        0.639563426586887,
+        0.6607406647462029,
+        0.6535588911845627,
+        0.6256677866582205
+      ],
+      "fit_time_seconds": 0.9221510887145996,
+      "rank": 8
+    },
+    {
+      "model_type": "RandomForest",
+      "cv_strategy": "TimeSeriesSplit",
+      "params": {
+        "n_estimators": 500,
+        "min_samples_split": 2,
+        "min_samples_leaf": 8,
+        "max_features": 0.7,
+        "max_depth": null,
+        "class_weight": "balanced"
+      },
+      "mean_f1_macro": 0.6832624881692728,
+      "std_f1_macro": 0.04355547470778986,
+      "mean_train_f1": 0.8208194301068964,
+      "fold_scores": [
+        0.7136363614991403,
+        0.7487698567880358,
+        0.6748774520010321,
+        0.6531801731481779,
+        0.6258485974099784
+      ],
+      "fit_time_seconds": 1.0714442253112793,
+      "rank": 4
+    },
+    {
+      "model_type": "RandomForest",
+      "cv_strategy": "TimeSeriesSplit",
+      "params": {
+        "n_estimators": 700,
+        "min_samples_split": 2,
+        "min_samples_leaf": 12,
+        "max_features": 0.5,
+        "max_depth": null,
+        "class_weight": "balanced"
+      },
+      "mean_f1_macro": 0.6620726853600714,
+      "std_f1_macro": 0.02275791661484166,
+      "mean_train_f1": 0.7913662523336746,
+      "fold_scores": [
+        0.6720715702947846,
+        0.6957070666079922,
+        0.6622681422565335,
+        0.6542623632171272,
+        0.6260542844239197
+      ],
+      "fit_time_seconds": 1.1583466529846191,
+      "rank": 6
+    },
+    {
+      "model_type": "RandomForest",
+      "cv_strategy": "TimeSeriesSplit",
+      "params": {
+        "n_estimators": 500,
+        "min_samples_split": 5,
+        "min_samples_leaf": 3,
+        "max_features": 0.5,
+        "max_depth": 10,
+        "class_weight": "balanced_subsample"
+      },
+      "mean_f1_macro": 0.7048602142784095,
+      "std_f1_macro": 0.06257759378169492,
+      "mean_train_f1": 0.8557021773373792,
+      "fold_scores": [
+        0.7729986232363873,
+        0.7846447615513045,
+        0.6748774520010321,
+        0.6648301377609029,
+        0.6269500968424211
+      ],
+      "fit_time_seconds": 1.1087567806243896,
+      "rank": 1
+    },
+    {
+      "model_type": "RandomForest",
+      "cv_strategy": "TimeSeriesSplit",
+      "params": {
+        "n_estimators": 300,
+        "min_samples_split": 10,
+        "min_samples_leaf": 3,
+        "max_features": "log2",
+        "max_depth": null,
+        "class_weight": "balanced_subsample"
+      },
+      "mean_f1_macro": 0.6961101201012502,
+      "std_f1_macro": 0.06174513081290034,
+      "mean_train_f1": 0.8486778907985674,
+      "fold_scores": [
+        0.7524347826086957,
+        0.7846447615513045,
+        0.6706729882207947,
+        0.6480947658085482,
+        0.6247033023169084
+      ],
+      "fit_time_seconds": 0.4625136375427246,
+      "rank": 2
+    },
+    {
+      "model_type": "RandomForest",
+      "cv_strategy": "TimeSeriesSplit",
+      "params": {
+        "n_estimators": 500,
+        "min_samples_split": 10,
+        "min_samples_leaf": 8,
+        "max_features": "log2",
+        "max_depth": 10,
+        "class_weight": "balanced"
+      },
+      "mean_f1_macro": 0.6862093034558279,
+      "std_f1_macro": 0.048810651824461114,
+      "mean_train_f1": 0.8210984995103436,
+      "fold_scores": [
+        0.7059023833803284,
+        0.7681255614860222,
+        0.6780865216124089,
+        0.6532221196753207,
+        0.6257099311250592
+      ],
+      "fit_time_seconds": 0.5672448158264161,
+      "rank": 3
+    },
+    {
+      "model_type": "RandomForest",
+      "cv_strategy": "TimeSeriesSplit",
+      "params": {
+        "n_estimators": 500,
+        "min_samples_split": 2,
+        "min_samples_leaf": 12,
+        "max_features": "log2",
+        "max_depth": 6,
+        "class_weight": "balanced_subsample"
+      },
+      "mean_f1_macro": 0.6478302932425268,
+      "std_f1_macro": 0.023579422498613795,
+      "mean_train_f1": 0.7725771530054191,
+      "fold_scores": [
+        0.6422353776329008,
+        0.6447571822678844,
+        0.6826727181481926,
+        0.6590603163537984,
+        0.6104258718098577
+      ],
+      "fit_time_seconds": 0.65834641456604,
+      "rank": 9
+    },
+    {
+      "model_type": "RandomForest",
+      "cv_strategy": "TimeSeriesSplit",
+      "params": {
+        "n_estimators": 500,
+        "min_samples_split": 5,
+        "min_samples_leaf": 12,
+        "max_features": 0.5,
+        "max_depth": 8,
+        "class_weight": "balanced"
+      },
+      "mean_f1_macro": 0.6588321426644962,
+      "std_f1_macro": 0.015155513336862768,
+      "mean_train_f1": 0.7890057891526729,
+      "fold_scores": [
+        0.6652876385700813,
+        0.6765890311317498,
+        0.6589619167169479,
+        0.6623960599149572,
+        0.6309260669887443
+      ],
+      "fit_time_seconds": 0.7939236640930176,
+      "rank": 7
+    },
+    {
+      "model_type": "RandomForest",
+      "cv_strategy": "TimeSeriesSplit",
+      "params": {
+        "n_estimators": 500,
+        "min_samples_split": 5,
+        "min_samples_leaf": 12,
+        "max_features": 0.5,
+        "max_depth": 8,
+        "class_weight": "balanced_subsample"
+      },
+      "mean_f1_macro": 0.6634147761364908,
+      "std_f1_macro": 0.02093886233807278,
+      "mean_train_f1": 0.7892396936590748,
+      "fold_scores": [
+        0.6754729308390023,
+        0.6963825073567607,
+        0.6589619167169479,
+        0.6507766675092265,
+        0.6354798582605168
+      ],
+      "fit_time_seconds": 0.9568403720855713,
+      "rank": 5
+    },
+    {
+      "model_type": "XGBoost",
+      "cv_strategy": "TimeSeriesSplit",
+      "params": {
+        "subsample": 1.0,
+        "reg_lambda": 0.5,
+        "reg_alpha": 0.5,
+        "n_estimators": 500,
+        "min_child_weight": 3,
+        "max_depth": 3,
+        "learning_rate": 0.1,
+        "colsample_bytree": 0.6
+      },
+      "mean_f1_macro": 0.7066867527536924,
+      "std_f1_macro": 0.06677932524077981,
+      "mean_train_f1": 0.8941621896818933,
+      "fold_scores": [
+        0.7387649611026467,
+        0.7882902988444711,
+        0.7339459666114438,
+        0.6805671321824593,
+        0.5918654050274412
+      ],
+      "fit_time_seconds": 1.9623108863830567,
+      "rank": 8
+    },
+    {
+      "model_type": "XGBoost",
+      "cv_strategy": "TimeSeriesSplit",
+      "params": {
+        "subsample": 0.7,
+        "reg_lambda": 5.0,
+        "reg_alpha": 0.01,
+        "n_estimators": 300,
+        "min_child_weight": 7,
+        "max_depth": 3,
+        "learning_rate": 0.01,
+        "colsample_bytree": 0.6
+      },
+      "mean_f1_macro": 0.6397116806662,
+      "std_f1_macro": 0.02158060297637376,
+      "mean_train_f1": 0.7661400200871608,
+      "fold_scores": [
+        0.6195679154386393,
+        0.675702849603684,
+        0.6497886488825783,
+        0.6364935900117286,
+        0.6170053993943697
+      ],
+      "fit_time_seconds": 1.3119866371154785,
+      "rank": 10
+    },
+    {
+      "model_type": "XGBoost",
+      "cv_strategy": "TimeSeriesSplit",
+      "params": {
+        "subsample": 0.7,
+        "reg_lambda": 1.0,
+        "reg_alpha": 0.01,
+        "n_estimators": 200,
+        "min_child_weight": 1,
+        "max_depth": 3,
+        "learning_rate": 0.1,
+        "colsample_bytree": 0.9
+      },
+      "mean_f1_macro": 0.7079394574534937,
+      "std_f1_macro": 0.06313708906549804,
+      "mean_train_f1": 0.8838213454835027,
+      "fold_scores": [
+        0.7629753303010607,
+        0.7846447615513045,
+        0.7222979895879487,
+        0.6432585681969918,
+        0.6265206376301633
+      ],
+      "fit_time_seconds": 0.8845702648162842,
+      "rank": 5
+    },
+    {
+      "model_type": "XGBoost",
+      "cv_strategy": "TimeSeriesSplit",
+      "params": {
+        "subsample": 0.9,
+        "reg_lambda": 1.0,
+        "reg_alpha": 0.1,
+        "n_estimators": 300,
+        "min_child_weight": 5,
+        "max_depth": 6,
+        "learning_rate": 0.05,
+        "colsample_bytree": 0.8
+      },
+      "mean_f1_macro": 0.706927238823719,
+      "std_f1_macro": 0.06220841816934371,
+      "mean_train_f1": 0.8927718936236548,
+      "fold_scores": [
+        0.7558171486393143,
+        0.7846447615513045,
+        0.7204145658263306,
+        0.658374288785033,
+        0.6153854293166127
+      ],
+      "fit_time_seconds": 2.2268419742584227,
+      "rank": 7
+    },
+    {
+      "model_type": "XGBoost",
+      "cv_strategy": "TimeSeriesSplit",
+      "params": {
+        "subsample": 0.8,
+        "reg_lambda": 2.0,
+        "reg_alpha": 0.5,
+        "n_estimators": 300,
+        "min_child_weight": 1,
+        "max_depth": 4,
+        "learning_rate": 0.03,
+        "colsample_bytree": 0.6
+      },
+      "mean_f1_macro": 0.7071649980090929,
+      "std_f1_macro": 0.06010223610384619,
+      "mean_train_f1": 0.869909646122427,
+      "fold_scores": [
+        0.743706095647484,
+        0.7882902988444711,
+        0.725793698889395,
+        0.6549802507286834,
+        0.6230546459354311
+      ],
+      "fit_time_seconds": 1.6936890125274657,
+      "rank": 6
+    },
+    {
+      "model_type": "XGBoost",
+      "cv_strategy": "TimeSeriesSplit",
+      "params": {
+        "subsample": 0.9,
+        "reg_lambda": 2.0,
+        "reg_alpha": 0.0,
+        "n_estimators": 300,
+        "min_child_weight": 3,
+        "max_depth": 4,
+        "learning_rate": 0.1,
+        "colsample_bytree": 0.7
+      },
+      "mean_f1_macro": 0.7101350467011738,
+      "std_f1_macro": 0.06235945540521978,
+      "mean_train_f1": 0.8947349801132377,
+      "fold_scores": [
+        0.7630695642556956,
+        0.784273825429686,
+        0.7257586091899852,
+        0.657754936634247,
+        0.6198182979962545
+      ],
+      "fit_time_seconds": 1.6680663108825684,
+      "rank": 2
+    },
+    {
+      "model_type": "XGBoost",
+      "cv_strategy": "TimeSeriesSplit",
+      "params": {
+        "subsample": 1.0,
+        "reg_lambda": 0.5,
+        "reg_alpha": 0.1,
+        "n_estimators": 300,
+        "min_child_weight": 1,
+        "max_depth": 6,
+        "learning_rate": 0.01,
+        "colsample_bytree": 0.8
+      },
+      "mean_f1_macro": 0.7120770369477956,
+      "std_f1_macro": 0.056660740081164306,
+      "mean_train_f1": 0.8764208057403499,
+      "fold_scores": [
+        0.7551732720966084,
+        0.7882902988444711,
+        0.7187888040712469,
+        0.6632213197430589,
+        0.6349114899835926
+      ],
+      "fit_time_seconds": 2.3976524829864503,
+      "rank": 1
+    },
+    {
+      "model_type": "XGBoost",
+      "cv_strategy": "TimeSeriesSplit",
+      "params": {
+        "subsample": 1.0,
+        "reg_lambda": 1.0,
+        "reg_alpha": 0.1,
+        "n_estimators": 300,
+        "min_child_weight": 7,
+        "max_depth": 6,
+        "learning_rate": 0.1,
+        "colsample_bytree": 0.8
+      },
+      "mean_f1_macro": 0.709643281985523,
+      "std_f1_macro": 0.06183482003966725,
+      "mean_train_f1": 0.89427233315005,
+      "fold_scores": [
+        0.7506274676736822,
+        0.7882902988444711,
+        0.7285488036969952,
+        0.6658605763518499,
+        0.6148892633606162
+      ],
+      "fit_time_seconds": 2.09067645072937,
+      "rank": 3
+    },
+    {
+      "model_type": "XGBoost",
+      "cv_strategy": "TimeSeriesSplit",
+      "params": {
+        "subsample": 1.0,
+        "reg_lambda": 1.0,
+        "reg_alpha": 0.01,
+        "n_estimators": 500,
+        "min_child_weight": 5,
+        "max_depth": 3,
+        "learning_rate": 0.1,
+        "colsample_bytree": 0.6
+      },
+      "mean_f1_macro": 0.7090631027052818,
+      "std_f1_macro": 0.06416743673861347,
+      "mean_train_f1": 0.8938195950237533,
+      "fold_scores": [
+        0.7634127203578116,
+        0.7846447615513045,
+        0.7226810818043479,
+        0.66404840623177,
+        0.6105285435811751
+      ],
+      "fit_time_seconds": 2.116765928268433,
+      "rank": 4
+    },
+    {
+      "model_type": "XGBoost",
+      "cv_strategy": "TimeSeriesSplit",
+      "params": {
+        "subsample": 0.9,
+        "reg_lambda": 0.5,
+        "reg_alpha": 0.0,
+        "n_estimators": 500,
+        "min_child_weight": 1,
+        "max_depth": 3,
+        "learning_rate": 0.01,
+        "colsample_bytree": 0.8
+      },
+      "mean_f1_macro": 0.6963178007278168,
+      "std_f1_macro": 0.04446432956575589,
+      "mean_train_f1": 0.8328696294853575,
+      "fold_scores": [
+        0.7424563919053679,
+        0.7369403470850092,
+        0.7077137190430381,
+        0.6713136511899871,
+        0.623164894415682
+      ],
+      "fit_time_seconds": 2.228727674484253,
+      "rank": 9
+    },
+    {
+      "model_type": "GradientBoosting",
+      "cv_strategy": "TimeSeriesSplit",
+      "params": {
+        "subsample": 0.9,
+        "n_estimators": 300,
+        "min_samples_leaf": 8,
+        "max_depth": 5,
+        "learning_rate": 0.1
+      },
+      "mean_f1_macro": 0.7106349529133622,
+      "std_f1_macro": 0.06406185298141046,
+      "mean_train_f1": 0.8948702445487979,
+      "fold_scores": [
+        0.7588421284070264,
+        0.784273825429686,
+        0.7379396052524263,
+        0.6573255376564849,
+        0.6147936678211872
+      ],
+      "fit_time_seconds": 3.063735246658325,
+      "rank": 4
+    },
+    {
+      "model_type": "GradientBoosting",
+      "cv_strategy": "TimeSeriesSplit",
+      "params": {
+        "subsample": 0.7,
+        "n_estimators": 700,
+        "min_samples_leaf": 5,
+        "max_depth": 6,
+        "learning_rate": 0.05
+      },
+      "mean_f1_macro": 0.7151760478733402,
+      "std_f1_macro": 0.06964897388766479,
+      "mean_train_f1": 0.8945311793136013,
+      "fold_scores": [
+        0.7700155282947114,
+        0.7846447615513045,
+        0.7533348387150447,
+        0.6636727850407597,
+        0.6042123257648813
+      ],
+      "fit_time_seconds": 7.510290241241455,
+      "rank": 1
+    },
+    {
+      "model_type": "GradientBoosting",
+      "cv_strategy": "TimeSeriesSplit",
+      "params": {
+        "subsample": 0.9,
+        "n_estimators": 500,
+        "min_samples_leaf": 8,
+        "max_depth": 5,
+        "learning_rate": 0.1
+      },
+      "mean_f1_macro": 0.7065283160718382,
+      "std_f1_macro": 0.06500019812111622,
+      "mean_train_f1": 0.8942544111840721,
+      "fold_scores": [
+        0.7565384483437093,
+        0.7806053225963124,
+        0.7346995044885352,
+        0.6497872621434002,
+        0.6110110427872337
+      ],
+      "fit_time_seconds": 5.107943153381347,
+      "rank": 7
+    },
+    {
+      "model_type": "GradientBoosting",
+      "cv_strategy": "TimeSeriesSplit",
+      "params": {
+        "subsample": 1.0,
+        "n_estimators": 300,
+        "min_samples_leaf": 3,
+        "max_depth": 5,
+        "learning_rate": 0.1
+      },
+      "mean_f1_macro": 0.7151110670919903,
+      "std_f1_macro": 0.06273308164358922,
+      "mean_train_f1": 0.8939301330377418,
+      "fold_scores": [
+        0.7592189714817487,
+        0.7806053225963124,
+        0.7533771136076828,
+        0.6640395903703185,
+        0.6183143374038895
+      ],
+      "fit_time_seconds": 3.3189676284790037,
+      "rank": 2
+    },
+    {
+      "model_type": "GradientBoosting",
+      "cv_strategy": "TimeSeriesSplit",
+      "params": {
+        "subsample": 0.7,
+        "n_estimators": 300,
+        "min_samples_leaf": 5,
+        "max_depth": 4,
+        "learning_rate": 0.1
+      },
+      "mean_f1_macro": 0.7076305922439763,
+      "std_f1_macro": 0.06869827704189102,
+      "mean_train_f1": 0.8945122396086773,
+      "fold_scores": [
+        0.7631881070107394,
+        0.7809029075250449,
+        0.7414306813898964,
+        0.6460019905398058,
+        0.606629274754395
+      ],
+      "fit_time_seconds": 2.1843956470489503,
+      "rank": 6
+    },
+    {
+      "model_type": "GradientBoosting",
+      "cv_strategy": "TimeSeriesSplit",
+      "params": {
+        "subsample": 0.8,
+        "n_estimators": 500,
+        "min_samples_leaf": 12,
+        "max_depth": 4,
+        "learning_rate": 0.01
+      },
+      "mean_f1_macro": 0.7034271074797821,
+      "std_f1_macro": 0.06449912767176352,
+      "mean_train_f1": 0.8711654183137343,
+      "fold_scores": [
+        0.7465390636700944,
+        0.7882902988444711,
+        0.7220534551189943,
+        0.6481172647233254,
+        0.6121354550420248
+      ],
+      "fit_time_seconds": 3.8301711559295653,
+      "rank": 8
+    },
+    {
+      "model_type": "GradientBoosting",
+      "cv_strategy": "TimeSeriesSplit",
+      "params": {
+        "subsample": 0.9,
+        "n_estimators": 200,
+        "min_samples_leaf": 5,
+        "max_depth": 5,
+        "learning_rate": 0.03
+      },
+      "mean_f1_macro": 0.701820249324784,
+      "std_f1_macro": 0.068373483159681,
+      "mean_train_f1": 0.8943983341245199,
+      "fold_scores": [
+        0.743610746155833,
+        0.7803304903950665,
+        0.7385419771485344,
+        0.6532075929591458,
+        0.5934104399653405
+      ],
+      "fit_time_seconds": 2.0367065906524657,
+      "rank": 9
+    },
+    {
+      "model_type": "GradientBoosting",
+      "cv_strategy": "TimeSeriesSplit",
+      "params": {
+        "subsample": 0.9,
+        "n_estimators": 300,
+        "min_samples_leaf": 5,
+        "max_depth": 8,
+        "learning_rate": 0.1
+      },
+      "mean_f1_macro": 0.7109406983736279,
+      "std_f1_macro": 0.06819865398863857,
+      "mean_train_f1": 0.8947784496697514,
+      "fold_scores": [
+        0.7664485024779143,
+        0.784273825429686,
+        0.7447208224148357,
+        0.6443359113413825,
+        0.6149244302043209
+      ],
+      "fit_time_seconds": 4.553884553909302,
+      "rank": 3
+    },
+    {
+      "model_type": "GradientBoosting",
+      "cv_strategy": "TimeSeriesSplit",
+      "params": {
+        "subsample": 0.9,
+        "n_estimators": 500,
+        "min_samples_leaf": 3,
+        "max_depth": 3,
+        "learning_rate": 0.03
+      },
+      "mean_f1_macro": 0.6997129685165417,
+      "std_f1_macro": 0.06601170637727996,
+      "mean_train_f1": 0.8916213371052379,
+      "fold_scores": [
+        0.7414996436208124,
+        0.7803304903950665,
+        0.7255448363041284,
+        0.6563208616780045,
+        0.594869010584697
+      ],
+      "fit_time_seconds": 3.3406084537506104,
+      "rank": 10
+    },
+    {
+      "model_type": "GradientBoosting",
+      "cv_strategy": "TimeSeriesSplit",
+      "params": {
+        "subsample": 1.0,
+        "n_estimators": 300,
+        "min_samples_leaf": 5,
+        "max_depth": 4,
+        "learning_rate": 0.01
+      },
+      "mean_f1_macro": 0.7086494451174298,
+      "std_f1_macro": 0.06624757394623193,
+      "mean_train_f1": 0.8614040202121886,
+      "fold_scores": [
+        0.7714664786339267,
+        0.7846447615513045,
+        0.7183895571987394,
+        0.6577575109470839,
+        0.6109889172560947
+      ],
+      "fit_time_seconds": 2.6064302921295166,
+      "rank": 5
+    }
+  ]
+}
