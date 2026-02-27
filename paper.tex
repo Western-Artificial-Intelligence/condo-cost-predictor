@@ -1,0 +1,365 @@
+% ==================================
+% DO NOT EDIT
+% ==================================
+\documentclass[conference]{IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{float}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\makeatletter
+\newcommand{\linebreakand}{%
+  \end{@IEEEauthorhalign}
+  \hfill\mbox{}\par
+  \mbox{}\hfill\begin{@IEEEauthorhalign}
+}
+\makeatother
+
+% ==================================
+% END
+% ==================================
+
+\begin{document}
+
+
+\title{Predicting Neighborhood Affordability Tiers in Toronto Using Static Urban Features}
+
+\author{
+
+\IEEEauthorblockN{Juan Gomez}
+\IEEEauthorblockA{
+    \textit{Western University} \\
+    lgomezvi@uwo.ca
+}
+
+\and
+\IEEEauthorblockN{Thomson Ore}
+\IEEEauthorblockA{
+    \textit{Western University} \\
+    ore7117@uwo.ca
+}
+
+\and
+\IEEEauthorblockN{Besma TBD}
+\IEEEauthorblockA{
+    \textit{Western University} \\
+    email@uwo.ca
+}
+
+\and
+\IEEEauthorblockN{Kevin TBD}
+\IEEEauthorblockA{
+    \textit{Western University} \\
+    email@uwo.ca
+}
+
+} % end authors
+\maketitle
+
+
+
+\begin{abstract}
+We present a machine learning system for predicting which affordability tier (Budget, Moderate, Expensive, or Premium) a Toronto neighborhood will occupy two years ahead, using only non-rent urban characteristics. Our dataset spans 15 years (2010--2024) across 158 neighborhoods, integrating rental, crime, transit, and green space data. We conducted a randomized hyperparameter search across 60 configurations of three model families evaluated under both stratified and temporal cross-validation. The best model (Gradient Boosting) achieves a cross-validated macro F1 of 0.740 and a held-out test F1 of 0.604 (95\% CI: 0.560--0.644), a 2.4$\times$ improvement over random baseline. The convergence of all three model families to similar performance provides evidence that the ceiling is data-driven. We complement the classifier with K-Means clustering and deploy the system as an interactive web application. Code: \href{https://github.com/Western-Artificial-Intelligence/condo-cost-predictor}{github.com/Western-Artificial-Intelligence/condo-cost-predictor}.
+\end{abstract}
+
+\section{Introduction}
+
+\subsection{Motivation}
+
+Toronto's rental market has experienced sustained price growth over the past decade, with average one-bedroom rents increasing from approximately \$1,100 in 2010 to over \$2,200 in 2024. The Canada Mortgage and Housing Corporation (CMHC) reports that Toronto's rental vacancy rate fell below 1.5\% in 2023, placing it among the tightest urban rental markets in North America~\cite{cmhc2023}. For students and young professionals entering the market, understanding which neighborhoods are likely to remain affordable is a practical concern with limited tooling support.
+
+With the growing availability of municipal open data portals~\cite{torontoOpenData}, there is an opportunity to combine longitudinal rental data with neighborhood-level characteristics---transit access, safety, green space---to help users reason about future affordability. Prior work on rental price prediction has focused primarily on listing-level features~\cite{pow2017, ho2021}, leaving neighborhood-level affordability forecasting underexplored.
+
+We aim to predict which affordability tier a Toronto neighborhood will occupy two years from now, using only non-rent urban features, and to deploy the model within an interactive exploration tool. Our contributions are:
+
+\begin{itemize}
+    \item A longitudinal dataset of 158 Toronto neighborhoods across 15 years (2010--2024), integrating rental, crime, transit, and green space data from 4 municipal data sources.
+    \item A systematic model selection pipeline with cross-validated hyperparameter search and bootstrapped confidence intervals.
+    \item An analysis of the predictive ceiling imposed by static urban features, quantified through the CV--test performance gap.
+    \item An interactive web application (FastAPI + Streamlit) for neighborhood-level rental affordability exploration.
+\end{itemize}
+
+We acknowledge upfront that our non-rent features are static proxies: crime rates, transit infrastructure, park counts, and population are taken from the 2024 snapshot and applied to all prior years. The model therefore cannot learn temporal dynamics (e.g., ``neighborhoods that gained a subway station saw rent increases''). Time-varying versions of these features do not exist in a clean, publicly available form for Toronto neighborhoods. We quantify the cost of this limitation in Section~III.
+
+\subsection{Related Works}
+
+Rental price prediction has been studied extensively at the listing level. Pow et al.~\cite{pow2017} applied gradient boosting and random forests to Montreal listings using unit-level features (square footage, bedrooms, building age), achieving strong predictive accuracy. Ho et al.~\cite{ho2021} compared machine learning methods for property price prediction in Hong Kong, finding that ensemble tree methods consistently outperform linear models when non-linear feature interactions are present.
+
+At the neighborhood level, Chaphalkar and Sandbhor~\cite{chaphalkar2019} used hedonic pricing models with neighborhood amenities but relied on cross-sectional data, limiting temporal generalization. Li et al.~\cite{li2022} applied gradient boosting to predict neighborhood-level rent changes in New York using time-varying features (construction permits, subway ridership), achieving higher accuracy than static-feature approaches.
+
+Our work differs in two ways: (1) we predict ordinal affordability tiers rather than continuous dollar amounts, which is more robust to the autocorrelation problem in rent time series, and (2) we explicitly characterize the performance ceiling imposed by static features rather than treating it as a limitation to be minimized.
+
+\subsection{Problem Definition}
+
+Given a feature vector $\mathbf{x}_i \in \mathbb{R}^{21}$ describing neighborhood $i$ at year $t$ (crime rates, transit metrics, green space density, population, geographic attributes), we aim to predict the target class $y_i \in \{1, 2, 3, 4\}$ representing the rent quartile the neighborhood will occupy at year $t+2$. Formally, we seek a classifier $f: \mathbb{R}^{21} \rightarrow \{1,2,3,4\}$ that maximizes macro F1 score,
+
+\begin{equation} \label{eq:macrof1}
+\text{Macro-F1} = \frac{1}{4} \sum_{c=1}^{4} \frac{2 \cdot P_c \cdot R_c}{P_c + R_c},
+\end{equation}
+
+where $P_c$ and $R_c$ are the precision and recall for class $c$. We use macro F1 rather than accuracy to weight all four tiers equally, preventing the model from ignoring underrepresented classes.
+
+The key constraint is that $\mathbf{x}_i$ must not include current rent ($\texttt{avg\_rent\_1br}$), as rent is highly autocorrelated and its inclusion causes the model to learn the trivial mapping ``current tier $\approx$ future tier'' rather than learning from neighborhood characteristics.
+
+
+\section{Methodology}
+
+\subsection{Data}
+
+Our dataset integrates four municipal data sources across 158 Toronto neighborhoods over 15 years (2010--2024):
+
+\begin{table}[H]
+\centering
+\caption{Data sources and coverage.}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Source} & \textbf{Data} & \textbf{Years} \\ \hline
+TREB & Avg. 1BR rent & 2010--2024 \\ \hline
+Toronto Open Data & Crime rates & 2014--2024 \\ \hline
+TTC GTFS & Transit stops, routes & 2024 \\ \hline
+Toronto Open Data & Park boundaries & 2024 \\ \hline
+Statistics Canada & Population & 2021 \\ \hline
+\end{tabular}
+\end{table}
+
+Raw data was collected via per-year ETL notebooks using DuckDB with spatial extensions for point-in-polygon joins. The 15 per-year CSVs were assembled into a master dataset (2,528 rows $\times$ 95 columns), then cleaned to 2,054 rows $\times$ 21 columns by deduplicating erroneous rows, imputing missing crime rates (2010--2013) using training set medians, and dropping rent-derived features to prevent target leakage.
+
+The target variable (\texttt{TARGET\_TIER\_2YR}) assigns each neighborhood-year to the rent quartile it will occupy two years later:
+
+\begin{table}[H]
+\centering
+\caption{Tier definitions based on within-year rent quartiles.}
+\begin{tabular}{|c|l|l|}
+\hline
+\textbf{Tier} & \textbf{Label} & \textbf{Definition} \\ \hline
+1 & Budget & Bottom 25\% of rents \\ \hline
+2 & Moderate & 25th--50th percentile \\ \hline
+3 & Expensive & 50th--75th percentile \\ \hline
+4 & Premium & Top 25\% of rents \\ \hline
+\end{tabular}
+\end{table}
+
+Quartile-based tiers handle inflation naturally: a \$1,200 rent was ``Expensive'' in 2010 but ``Budget'' in 2024.
+
+\subsection{Features}
+
+We use 14 base numeric features, 6 engineered ratio features, and 1 categorical feature (21 total).
+
+\begin{table}[H]
+\centering
+\caption{Base numeric features by category (14 total).}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Category} & \textbf{Features} \\ \hline
+Geography & area\_sq\_meters, perimeter\_meters \\ \hline
+Crime & ASSAULT, AUTOTHEFT, ROBBERY, THEFTOVER rates \\ \hline
+Transit & stop\_count, stop\_freq, line\_length, density, routes \\ \hline
+Green space & park\_count \\ \hline
+Demographics & POPULATION \\ \hline
+\end{tabular}
+\end{table}
+
+The engineered features normalize raw counts by neighborhood size or population:
+
+\begin{table}[H]
+\centering
+\caption{Engineered features and their correlation with the target, compared to the raw feature they replace.}
+\begin{tabular}{|l|l|c|}
+\hline
+\textbf{Feature} & \textbf{Formula} & \textbf{Corr.} \\ \hline
+\texttt{park\_density} & parks / area & 0.47 \\ \hline
+\texttt{pop\_density} & population / area & 0.38 \\ \hline
+\texttt{transit\_per\_capita} & stops / population & 0.29 \\ \hline
+\texttt{total\_crime\_rate} & $\sum$ 4 crime rates & 0.07 \\ \hline
+\texttt{compactness} & perimeter$^2$ / area & varies \\ \hline
+\texttt{routes\_per\_stop} & routes / stops & varies \\ \hline
+\end{tabular}
+\end{table}
+
+For comparison, the raw \texttt{park\_count} has a correlation of only 0.01 with the target, while \texttt{park\_density} achieves 0.47---a 47$\times$ improvement from normalizing by neighborhood area. The single categorical feature, \texttt{CLASSIFICATION\_CODE} (3 values), is label-encoded.
+
+Critically, \texttt{avg\_rent\_1br} (current rent) is \textit{excluded} from the feature set. Current rent almost perfectly predicts future rent tier due to autocorrelation; including it causes the model to learn the trivial mapping ``current tier $\approx$ future tier'' and ignore all neighborhood characteristics.
+
+\subsection{Train/Test Split}
+
+We use a time-based split: train on 2010--2019 (1,580 rows), test on 2020--2022 (474 rows). No random shuffling---the model should never see future data during training.
+
+\begin{table}[H]
+\centering
+\caption{Time-based train/test split.}
+\begin{tabular}{|l|l|c|l|}
+\hline
+\textbf{Split} & \textbf{Years} & \textbf{Rows} & \textbf{Purpose} \\ \hline
+Train & 2010--2019 & 1,580 & CV and model fitting \\ \hline
+Test & 2020--2022 & 474 & Final evaluation \\ \hline
+\end{tabular}
+\end{table}
+
+The training set is approximately balanced: Budget (418), Moderate (403), Expensive (387), Premium (372).
+
+\subsection{Model Families}
+
+We evaluated three tree-based ensemble methods:
+
+\textbf{Random Forest (RF)}~\cite{breiman2001} trains independent decision trees on bootstrap samples of the data, then aggregates predictions by majority vote. It is naturally resistant to overfitting through bagging and feature subsampling.
+
+\textbf{XGBoost}~\cite{chen2016xgboost} builds trees sequentially, where each tree corrects the residual errors of the ensemble so far. It includes L1 (\texttt{reg\_alpha}) and L2 (\texttt{reg\_lambda}) regularization on leaf weights, plus row and column subsampling.
+
+\textbf{Gradient Boosting (GBM)}~\cite{friedman2001} uses a similar sequential boosting approach to XGBoost but with a different implementation (scikit-learn~\cite{pedregosa2011}). It employs stochastic gradient boosting (\texttt{subsample} $< 1.0$) for regularization.
+
+\subsection{Hyperparameter Search}
+
+Using \texttt{RandomizedSearchCV} from scikit-learn~\cite{pedregosa2011}, we sampled 10 hyperparameter configurations per model family from predefined distributions and evaluated each under two cross-validation (CV) strategies:
+
+\begin{itemize}
+    \item \textbf{StratifiedKFold} (5 splits, shuffled): ensures proportional tier representation per fold. Appropriate because non-rent features are static across years, minimizing temporal leakage risk.
+    \item \textbf{TimeSeriesSplit} (5 splits): respects temporal ordering. More conservative but produces unbalanced fold sizes.
+\end{itemize}
+
+Total: 3 models $\times$ 2 CV strategies $\times$ 10 iterations = 60 configurations, 300 model fits.
+
+\subsection{Model Selection Criterion}
+
+The configuration with the highest mean cross-validated macro F1 across all 60 entries was selected. Macro F1 (Equation~\eqref{eq:macrof1}) was chosen over accuracy because it weights all four tiers equally, preventing the model from ignoring underrepresented classes.
+
+\subsection{Confidence Intervals}
+
+After model selection, we estimated 95\% confidence intervals (CIs) on the held-out test set using the bootstrap percentile method: resample the 474-row test set with replacement 2,000 times, compute metrics on each resample, and report the 2.5th and 97.5th percentiles as CI bounds.
+
+\subsection{Neighborhood Clustering}
+
+Separately, we clustered the 158 neighborhoods using K-Means on standardized versions of the 20 numeric features. We evaluated $k = 3$ through $k = 12$ using silhouette score and selected $k = 7$ for interpretability.
+
+
+\section{Results}
+
+\subsection{Cross-Validation Results}
+
+\begin{table}[H]
+\centering
+\caption{Best cross-validated macro F1 per model family and CV strategy. All StratifiedKFold results converge to a narrow band (0.73--0.74).}
+\begin{tabular}{|l|l|c|c|}
+\hline
+\textbf{Model} & \textbf{CV Strategy} & \textbf{CV F1} & \textbf{Std} \\ \hline
+\textbf{GBM} & \textbf{StratifiedKFold} & \textbf{0.7400} & \textbf{0.033} \\ \hline
+RF & StratifiedKFold & 0.7339 & 0.032 \\ \hline
+XGBoost & StratifiedKFold & 0.7324 & 0.025 \\ \hline
+GBM & TimeSeriesSplit & 0.7152 & --- \\ \hline
+XGBoost & TimeSeriesSplit & 0.7121 & --- \\ \hline
+RF & TimeSeriesSplit & 0.7049 & --- \\ \hline
+\end{tabular}
+\end{table}
+
+All three model families achieve CV F1 within a narrow band under StratifiedKFold. When fundamentally different algorithms---bagging (RF), sequential boosting (GBM), and regularized boosting (XGBoost)---converge to the same performance, the bottleneck is the data, not the model. StratifiedKFold consistently outperforms TimeSeriesSplit by 0.02--0.03 F1 points, as expected given the static features.
+
+\subsection{Held-Out Test Performance}
+
+\begin{table}[H]
+\centering
+\caption{Test set performance with 95\% bootstrapped CIs (2,000 resamples).}
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Metric} & \textbf{Value} & \textbf{95\% CI} \\ \hline
+Accuracy & 60.1\% & [55.7\%, 64.3\%] \\ \hline
+Macro F1 & 0.604 & [0.560, 0.644] \\ \hline
+Random baseline & 25.0\% & --- \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Per-tier classification performance on the held-out test set.}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Tier} & \textbf{Prec.} & \textbf{Recall} & \textbf{F1} & \textbf{95\% CI} \\ \hline
+Budget & 0.64 & 0.60 & 0.62 & [0.55, 0.69] \\ \hline
+Moderate & 0.52 & 0.53 & 0.53 & [0.45, 0.60] \\ \hline
+Expensive & 0.55 & 0.53 & 0.54 & [0.46, 0.61] \\ \hline
+Premium & 0.70 & 0.76 & 0.73 & [0.66, 0.79] \\ \hline
+\end{tabular}
+\end{table}
+
+Premium neighborhoods are easiest to predict (F1 = 0.73) due to distinctive characteristics (high density, high transit access). Middle tiers are hardest because neighborhoods near the 50th percentile boundary are genuinely ambiguous.
+
+\subsection{Confusion Matrix}
+
+\begin{table}[H]
+\centering
+\caption{Confusion matrix. Most errors are between adjacent tiers, consistent with the ordinal nature of the target.}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+ & \textbf{Bud.} & \textbf{Mod.} & \textbf{Exp.} & \textbf{Prem.} \\ \hline
+\textbf{Budget} & 75 & 29 & 15 & 5 \\ \hline
+\textbf{Moderate} & 38 & 63 & 16 & 2 \\ \hline
+\textbf{Expensive} & 2 & 29 & 66 & 28 \\ \hline
+\textbf{Premium} & 2 & 0 & 23 & 81 \\ \hline
+\end{tabular}
+\end{table}
+
+The off-diagonal mass is concentrated on adjacent tiers. Budget neighborhoods are misclassified as Moderate (29 cases) far more often than as Premium (5 cases), confirming that the model's errors are ordinal in nature.
+
+\subsection{The CV--Test Gap}
+
+The CV F1 (0.740) exceeds the test F1 (0.604) by 0.136 points. We attribute this to: (1) the static-feature limitation---the model learns neighborhood identity signals that hold within 2010--2019 but cannot explain market shifts in 2020--2022; and (2) distributional shift from pandemic-era disruption (suburban demand increase, downtown vacancy spike). This gap is a quantifiable result: it measures exactly how much predictive power is lost when features cannot capture temporal dynamics.
+
+\subsection{Clustering}
+
+K-Means with $k=7$ on standardized features produces interpretable neighborhood groups:
+
+\begin{table}[H]
+\centering
+\caption{Neighborhood clusters ($k=7$, silhouette = 0.135).}
+\begin{tabular}{|l|c|l|}
+\hline
+\textbf{Cluster} & \textbf{Size} & \textbf{Character} \\ \hline
+Frequent-Service Corridor & 22 & High-freq. transit \\ \hline
+Connected Family & 45 & Parks + transit \\ \hline
+Quiet Low-Density & 56 & Suburban \\ \hline
+Downtown \& Entertain. & 5 & High crime, parks \\ \hline
+Major Transit Hub & 2 & Extreme transit \\ \hline
+Transit-Rich Suburban & 18 & Large + transit \\ \hline
+High-Density Urban Core & 10 & Very high density \\ \hline
+\end{tabular}
+\end{table}
+
+
+\section{Discussion}
+
+\subsection{What the Model Learns}
+
+The model learns a mapping from neighborhood characteristics to affordability tier. SHAP analysis reveals that \texttt{park\_density}, \texttt{pop\_density}, and transit features are the strongest predictors, aligning with urban economics intuition: dense neighborhoods with good transit access and green space command higher rents. However, the model cannot learn \textit{transitions}---a neighborhood undergoing gentrification looks identical to a stable neighborhood in our feature space because those dynamics are not captured by static features.
+
+\subsection{Practical Utility}
+
+Despite the 60\% test accuracy, the system has practical value. It is 2.4$\times$ better than random guessing on a 4-class problem. Adjacent-tier errors are low-cost: predicting ``Moderate'' when the truth is ``Budget'' is a much smaller mistake than predicting ``Premium'' when the truth is ``Budget,'' and the confusion matrix (Table~VII) shows the model rarely makes extreme errors. The clustering component is independent of prediction accuracy---``find similar neighborhoods'' works well because static features are good at describing neighborhood character, even if they are limited for temporal prediction.
+
+\subsection{Limitations}
+
+Four limitations are worth noting. First, \textbf{static features} are the most significant constraint; time-varying features (year-over-year crime changes, new transit openings, building permits) would likely improve test performance but are not available in clean form. Second, \textbf{population proxy}: census population (2021) is applied to all years, misrepresenting neighborhoods with significant population change. Third, \textbf{crime data gap}: crime rates for 2010--2013 are imputed from training set medians, introducing noise. Fourth, the \textbf{pandemic disruption} in the 2020--2022 test period is not representative of normal market conditions; test performance on a non-pandemic period might be higher.
+
+\section{Conclusion}
+
+We built a neighborhood-level affordability tier classifier for Toronto that achieves 60.1\% accuracy (95\% CI: 55.7\%--64.3\%) using only static urban features, representing a 2.4$\times$ improvement over random baseline. A systematic hyperparameter search across 60 configurations of three model families confirmed that the performance ceiling is data-driven: all algorithms converge to similar cross-validated F1 (0.73--0.74). The 0.14-point gap between CV and test performance quantifies the cost of relying on static features in a temporally shifting market.
+
+The system is deployed as an interactive web application (FastAPI + Streamlit) that enables Toronto renters to explore affordability, compare neighborhoods via clustering, and view predicted tier trajectories.
+
+\textbf{Future work.} Incorporating time-varying features (building permits, zoning changes, transit line openings) would likely improve test performance. Ordinal classification losses that penalize adjacent-tier errors less than distant-tier errors could better exploit the target's ordinal structure. Extending the prediction horizon analysis (1, 3, 5 years) would characterize how accuracy degrades with horizon length. Finally, ensembling the top-$k$ models from the search via stacking or soft voting may yield marginal gains beyond the best single model.
+
+\section{Acknowledgements}
+
+We thank the City of Toronto Open Data Portal, the Toronto Regional Real Estate Board (TREB), and the Toronto Transit Commission (TTC) for making the underlying datasets publicly available. This project was developed as part of [Course Code] at Western University.
+
+
+\newpage
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}
