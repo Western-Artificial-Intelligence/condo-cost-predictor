@@ -11,8 +11,7 @@ training/.venv
 
 notebooks/.ipynb_checkpoints
 
-# Large binary model artifacts (regenerate with: python3 models/train_tier_classifier.py)
-models/*.pkl
+# Model .pkl files are tracked; regenerate with: python3 models/train_tier_classifier.py
 
 __pycache__/
 *.pyc
